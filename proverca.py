@@ -1,3 +1,6 @@
+import pygame
+
+x = 0
 running = True
 directions = {"right": False, "left": False}
 while running:
