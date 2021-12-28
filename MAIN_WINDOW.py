@@ -70,20 +70,10 @@ if __name__ == '__main__':
                     directions['left'] = False
         if directions['right']:
             if car.rect.x <= 346:
-                car.rect.x += 3
+                car.rect.x += 5
         if directions['left']:
             if car.rect.x >= 10:
-                car.rect.x -= 3
-        # if pygame.key.get_pressed()[K_w]:
-        #     speed += 1
-        # if pygame.key.get_pressed()[K_s]:
-        #     speed -= 1
-        # if pygame.key.get_pressed()[K_a]:
-        #     if car.rect.x != 10:
-        #         car.rect.x -= 4
-        # if pygame.key.get_pressed()[K_d]:
-        #     if car.rect.x != 346:
-        #         car.rect.x += 4
+                car.rect.x -= 5
         if car.rect.x >= 220:
             car.image = load_image("real_car2.png")
         if car.rect.x <= 120:
