@@ -54,7 +54,7 @@ if __name__ == '__main__':
                     button.change_picture("Кнопка светлая.png", k_image_width, k_image_height)
                 else:
                     button.set_deafult()
-                print(button.rect.collidepoint(event.pos))
+                # print(button.rect.collidepoint(event.pos))
         screen.fill(pygame.Color((0, 0, 0)))
         all_sprites.draw(screen)
 
