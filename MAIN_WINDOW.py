@@ -11,7 +11,7 @@ def load_image(name, colorkey=None):  # открытие картинки
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
-    image = pygame.image.load(fullname)
+    image = pygame.image.load(fullname).convert_alpha()
     return image
 
 
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
 
     running = True
-    fps = 60  # пикселей в секунду
+    fps = 61  # пикселей в секунду
     clock = pygame.time.Clock()
 
     # первая дорога
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     car.rect = car.image.get_rect()
     car.image = load_image("real_car.png")
     main_car_group.add(car)
-    car.rect.x = 160
+    car.rect.x = 160  # 160
     car.rect.y = 800  # 800
     # машины по дороге
     car_road = pygame.sprite.Group()
@@ -70,72 +70,112 @@ if __name__ == '__main__':
     start = False
     k = 0  # не обращай внимание
     z = 0
+    kol_stol = 0
+    health = 10
+    sec_neuas = 0
+    what_was = 'real_car.png'
     while running:
-        if start:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                if event.type == pygame.KEYDOWN:  # управление машинки
-                    if event.key == pygame.K_d:
-                        directions['right'] = True
-                    elif event.key == pygame.K_a:
-                        directions['left'] = True
-                    if event.key == pygame.K_w:  # управление скорости
-                        speed += 1
-                    if event.key == pygame.K_s:
-                        if speed != 3:
-                            speed -= 1
-                if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_d:
-                        directions['right'] = False
-                    elif event.key == pygame.K_a:
-                        directions['left'] = False
-            if directions['right']:  # направо
-                if car.rect.x <= 346:
-                    car.rect.x += 5
-            if directions['left']:  # налево
-                if car.rect.x >= 10:
-                    car.rect.x -= 5
-            if car.rect.x >= 220:  # изменение изображения
-                car.image = load_image("real_car2.png")
-            if car.rect.x <= 120:
-                car.image = load_image("real_car.png")
+        if health == 0:
+            speed = 0
+            if what_was == 'real_car.png':
+                for i in main_car_group:
+                    i.image = load_image("break_car_taxi_2.png")
+            elif what_was == 'real_car2.png':
+                for i in main_car_group:
+                    i.image = load_image("break_car_taxi_1.png")
+            screen.fill((0, 0, 0))
+            all_sprites.draw(screen)
+            main_car_group.draw(screen)
+            car_road.draw(screen)
+            clock.tick(fps)
+            pygame.display.flip()
         else:
-            car.rect.y -= 5
-            if car.rect.y <= 500:
-                start = True
-                k = 60  # для показа START GAME
-                z = 100
-        screen.fill((0, 0, 0))
-        all_sprites.draw(screen)
-        main_car_group.draw(screen)
-        sprite1.rect.y += speed
-        sprite2.rect.y += speed
-        if sprite1.rect.y >= 796 - speed - 1:  # если уходит за экран фон
-            sprite1.rect.y = -797
-        if sprite2.rect.y >= 796 - speed - 1:
-            sprite2.rect.y = -797
-        if start:
-            if k > 0:
-                k -= 1
-                # рисуем start
-                font = pygame.font.Font(None, 80)
-                text = font.render("START GAME", True, (255, 204, 0))
-                screen.blit(text, [20, 400])
-            for i in car_road:
-                i.rect.y += speed
-                if i.rect.y >= 796:
-                    qq = random.randint(1, 3)
-                    if qq == 1:
-                        i.rect.x = 10 + random.randint(1, 3) * 25
-                    elif qq == 2:
-                        i.rect.x = 140 + random.randint(1, 3) * 20
-                    else:
-                        i.rect.x = 290 + random.randint(1, 3) * 10
-                    i.rect.y = -120
-                    i.image = load_image(f"roud_car_{random.randint(1, 5)}.png")
-            if pygame.sprite.spritecollideany(car, car_road):
-                print('ЯРИК пиздец науй')
+            if start:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        running = False
+                    if event.type == pygame.KEYDOWN:  # управление машинки
+                        if event.key == pygame.K_d:
+                            directions['right'] = True
+                        elif event.key == pygame.K_a:
+                            directions['left'] = True
+                        if event.key == pygame.K_w:  # управление скорости
+                            speed += 1
+                        if event.key == pygame.K_s:
+                            if speed != 3:
+                                speed -= 1
+                    if event.type == pygame.KEYUP:
+                        if event.key == pygame.K_d:
+                            directions['right'] = False
+                        elif event.key == pygame.K_a:
+                            directions['left'] = False
+                if directions['right']:  # направо
+                    if car.rect.x <= 346:
+                        car.rect.x += 5
+                if directions['left']:  # налево
+                    if car.rect.x >= 10:
+                        car.rect.x -= 5
+                if car.rect.x >= 220 and sec_neuas == 0:  # изменение изображения
+                    car.image = load_image("real_car2.png")
+                    what_was = 'real_car2.png'
+                if car.rect.x <= 120 and sec_neuas == 0:
+                    car.image = load_image("real_car.png")
+                    what_was = 'real_car.png'
+            else:
+                car.rect.y -= 5
+                if car.rect.y <= 500:
+                    start = True
+                    k = 60  # для показа START GAME
+                    z = 100
+            screen.fill((0, 0, 0))
+            all_sprites.draw(screen)
+            main_car_group.draw(screen)
+            # управление фоном
+            sprite1.rect.y += speed
+            sprite2.rect.y += speed
+            if sprite1.rect.y >= 796 - speed - 1:  # если уходит за экран фон
+                sprite1.rect.y = -797
+            if sprite2.rect.y >= 796 - speed - 1:
+                sprite2.rect.y = -797
+            if start:  # main
+                if k > 0:  # рисуем start
+                    k -= 1
+                    font = pygame.font.Font(None, 80)
+                    text = font.render("START GAME", True, (255, 204, 0))
+                    screen.blit(text, [20, 400])
+                for i in car_road:  # если машина ушла с трассы
+                    i.rect.y += speed
+                    if i.rect.y >= 796:
+                        qq = random.randint(1, 3)
+                        if qq == 1:
+                            i.rect.x = 10 + random.randint(1, 3) * 25
+                        elif qq == 2:
+                            i.rect.x = 140 + random.randint(1, 3) * 20
+                        else:
+                            i.rect.x = 250 + random.randint(1, 3) * 25
+                        i.rect.y = -120
+                        i.image = load_image(f"roud_car_{random.randint(1, 5)}.png")
+                # маневр века
+                for i in main_car_group:
+                    car.rect.x += 20
+                    car.rect.y += 20
+                if pygame.sprite.spritecollideany(car, car_road) and sec_neuas == 0:  # сталкивание с машиной
+                    blocks_hit_list = pygame.sprite.spritecollide(car, car_road, False)
+                    blocks_hit_list[0].image = load_image("break_car_road.png")
+                    kol_stol += 1
+                    health -= 1
+                    sec_neuas = 2 * fps  # бесмертие
+                    print(kol_stol)
+                    print(blocks_hit_list)
+                for i in main_car_group:
+                    car.rect.x -= 20
+                    car.rect.y -= 20
+
+                if sec_neuas != 0:  # управление бесмертием
+                    sec_neuas -= 1
+                    car.image = load_image("legend.png")
+                else:
+                    car.image = load_image(what_was)
             car_road.draw(screen)
         clock.tick(fps)
         pygame.display.flip()
