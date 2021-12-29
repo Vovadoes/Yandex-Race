@@ -2,11 +2,8 @@ import pygame
 from functions import load_image
 from Button import Button
 
-if __name__ == '__main__':
-    pygame.init()
-    size = width, height = 800, 450
-    screen = pygame.display.set_mode(size)
 
+def menu(screen, size):
     background = load_image("Фон меню.png")
 
     k_image_width = width / background.get_width()
@@ -16,13 +13,11 @@ if __name__ == '__main__':
     all_sprites = pygame.sprite.Group()
 
     # создадим спрайт
-    background_sprite = pygame.sprite.Sprite()
+    background_sprite = pygame.sprite.Sprite(all_sprites)
     # определим его вид
     background_sprite.image = pygame.transform.scale(background, size)
     # и размеры
     background_sprite.rect = background_sprite.image.get_rect()
-    # добавим спрайт в группу
-    # all_sprites.add(background_sprite)
 
     # # создадим спрайт
     # button_sprite = pygame.sprite.Sprite()
@@ -40,11 +35,6 @@ if __name__ == '__main__':
     button.rect.y = 100
     buttons.append(button)
 
-    font = pygame.font.Font(None, 80)
-    text = font.render("START GAME", True, (255, 204, 0))
-    screen.blit(text, [20, 400])
-
-    k = 20
     fps = 30
     running = True
     clock = pygame.time.Clock()
@@ -64,3 +54,11 @@ if __name__ == '__main__':
             i.render_text(screen)
         clock.tick(fps)
         pygame.display.flip()
+
+
+if __name__ == '__main__':
+    pygame.init()
+    size = width, height = 800, 450
+    screen = pygame.display.set_mode(size)
+
+    menu(screen, size)
