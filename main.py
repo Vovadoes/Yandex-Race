@@ -34,9 +34,11 @@ if __name__ == '__main__':
     # # добавим спрайт в группу
     # all_sprites.add(button_sprite)
 
+    buttons = []
     button = Button("Кнопка.png", k_image_width, k_image_height, all_sprites)
     button.rect.x = 100
     button.rect.y = 100
+    buttons.append(button)
 
     k = 20
     fps = 30
@@ -48,6 +50,10 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEMOTION:
+                if button.rect.collidepoint(event.pos):
+                    button.change_picture("Кнопка светлая.png", k_image_width, k_image_height)
+                else:
+                    button.set_deafult()
                 print(button.rect.collidepoint(event.pos))
         screen.fill(pygame.Color((0, 0, 0)))
         all_sprites.draw(screen)
