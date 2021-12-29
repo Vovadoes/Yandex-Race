@@ -8,7 +8,6 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
 
     background = load_image("Фон меню.png")
-    # button = load_image("Кнопка.png")
 
     k_image_width = width / background.get_width()
     k_image_height = height / background.get_height()
@@ -23,7 +22,7 @@ if __name__ == '__main__':
     # и размеры
     background_sprite.rect = background_sprite.image.get_rect()
     # добавим спрайт в группу
-    all_sprites.add(background_sprite)
+    # all_sprites.add(background_sprite)
 
     # # создадим спрайт
     # button_sprite = pygame.sprite.Sprite()
@@ -36,9 +35,14 @@ if __name__ == '__main__':
 
     buttons = []
     button = Button("Кнопка.png", k_image_width, k_image_height, all_sprites)
+    button.set_text("Новая игра")
     button.rect.x = 100
     button.rect.y = 100
     buttons.append(button)
+
+    font = pygame.font.Font(None, 80)
+    text = font.render("START GAME", True, (255, 204, 0))
+    screen.blit(text, [20, 400])
 
     k = 20
     fps = 30
@@ -54,9 +58,9 @@ if __name__ == '__main__':
                     button.change_picture("Кнопка светлая.png", k_image_width, k_image_height)
                 else:
                     button.set_deafult()
-                # print(button.rect.collidepoint(event.pos))
         screen.fill(pygame.Color((0, 0, 0)))
         all_sprites.draw(screen)
-
+        for i in buttons:
+            i.render_text(screen)
         clock.tick(fps)
         pygame.display.flip()
