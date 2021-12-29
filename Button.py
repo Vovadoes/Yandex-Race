@@ -9,6 +9,7 @@ class Button(pygame.sprite.Sprite):
         self.deafult_k_image_height = k_image_height
         self.change_picture(path, k_image_width, k_image_height, 0, 0)
         super().__init__(*group)
+        self.text = None
 
     def change_picture(self, path, k_image_width=1, k_image_height=1, x=None, y=None):
         button = load_image(path)
@@ -21,7 +22,13 @@ class Button(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
 
-
     def set_deafult(self):
         self.change_picture(self.deafult_path, self.deafult_k_image_width,
                             self.deafult_k_image_height)
+
+    def set_text(self, text):
+        font = pygame.font.Font(None, self.rect.height)
+        self.text = font.render(text, True, (255, 204, 0))
+
+    def render_text(self, screen):
+        screen.blit(self.text, (self.rect.x, self.rect.y))
