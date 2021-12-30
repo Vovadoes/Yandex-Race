@@ -1,3 +1,22 @@
-import random
+import pygame
 
-print([random.randint(1, 5)for i in range(5)])
+if __name__ == '__main__':
+    pygame.init()
+    size = width, height = 1542, 799
+    screen = pygame.display.set_mode(size)
+
+    running = True
+    while running:
+        # внутри игрового цикла ещё один цикл
+        # приема и обработки сообщений
+        for event in pygame.event.get():
+            # при закрытии окна
+            if event.type == pygame.QUIT:
+                running = False
+
+        # отрисовка и изменение свойств объектов
+        # ...
+
+        # обновление экрана
+        pygame.display.flip()
+    pygame.quit()
