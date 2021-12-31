@@ -27,8 +27,9 @@ class Button(pygame.sprite.Sprite):
                             self.deafult_k_image_height)
 
     def set_text(self, text):
-        font = pygame.font.Font(None, self.rect.height)
-        self.text = font.render(text, True, (255, 204, 0))
+        self.text = text
 
-    def render_text(self, screen):
-        screen.blit(self.text, (self.rect.x, self.rect.y))
+    def render_text(self, screen, color=(255, 204, 0)):
+        font = pygame.font.Font(None, self.rect.height)
+        render = font.render(self.text, True, color)
+        screen.blit(render, (self.rect.x, self.rect.y))

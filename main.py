@@ -4,6 +4,11 @@ from Button import Button
 
 
 def menu(screen, size):
+    # Константы для окна
+    heading_percentages = 10
+    heading_xp = size[1] // (100 / heading_percentages)
+    buttons_xp = size[1] - heading_xp
+
     background = load_image("Фон меню.png")
 
     k_image_width = width / background.get_width()
@@ -19,21 +24,23 @@ def menu(screen, size):
     # и размеры
     background_sprite.rect = background_sprite.image.get_rect()
 
-    # # создадим спрайт
-    # button_sprite = pygame.sprite.Sprite()
-    # # определим его вид
-    # button_sprite.image = pygame.transform.scale(button, (int(button.get_width() * k_image_width), int(button.get_height() * k_image_height)))
-    # # и размеры
-    # button_sprite.rect = button_sprite.image.get_rect()
-    # # добавим спрайт в группу
-    # all_sprites.add(button_sprite)
-
+    # инициализация кнопок
     buttons = []
     button = Button("Кнопка.png", k_image_width, k_image_height, all_sprites)
     button.set_text("Новая игра")
-    button.rect.x = 100
-    button.rect.y = 100
     buttons.append(button)
+
+    del button
+
+    # Размещение на экране
+    l = len(buttons)
+    r = (buttons_xp - sum([i.rect.height for i in buttons])) / (l+1)
+    x = heading_xp + r
+    for i in range(l):
+        buttons[i].rect.x = (size[0] - buttons[i].rect.width) // 2
+        buttons[i].rect.y = x
+        x += r + buttons[i].rect.height
+
 
     fps = 30
     running = True
@@ -44,10 +51,15 @@ def menu(screen, size):
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEMOTION:
-                if button.rect.collidepoint(event.pos):
-                    button.change_picture("Кнопка светлая.png", k_image_width, k_image_height)
-                else:
-                    button.set_deafult()
+                for button in buttons:
+                    if button.rect.collidepoint(event.pos):
+                        button.change_picture("Кнопка светлая.png", k_image_width, k_image_height)
+                    else:
+                        button.set_deafult()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for button in buttons:
+                    if button.rect.collidepoint(event.pos):
+                        print(f'{button.text} click')
         screen.fill(pygame.Color((0, 0, 0)))
         all_sprites.draw(screen)
         for i in buttons:
