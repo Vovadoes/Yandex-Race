@@ -10,6 +10,7 @@ class Button(pygame.sprite.Sprite):
         self.change_picture(path, k_image_width, k_image_height, 0, 0)
         super().__init__(*group)
         self.text = None
+        self.starter = None
 
     def change_picture(self, path, k_image_width=1, k_image_height=1, x=None, y=None):
         button = load_image(path)
