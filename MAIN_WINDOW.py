@@ -68,7 +68,7 @@ def show_fon_trees_real(group, screen, speed):
 
 
 if __name__ == '__main__':
-    indent_x = 162
+    indent_x = 571
     png_files = {'break_car_taxi_2.png': load_image("break_car_taxi_2.png"),
                  'break_car_taxi_1.png': load_image("break_car_taxi_1.png"),
                  'real_car.png': load_image("real_car.png"), 'real_car2.png': load_image("real_car2.png"),
@@ -97,7 +97,7 @@ if __name__ == '__main__':
                  'tree_19.png': load_image(f"tree_19.png")}
     pygame.init()  # создаем окно
     pygame.display.set_caption('Yandex_Race')
-    size = width, height = 400 + 162 * 2, 799
+    size = width, height = 400 + 571 * 2, 799
     screen = pygame.display.set_mode(size)
 
     running = True
@@ -126,14 +126,14 @@ if __name__ == '__main__':
     sprite_side_road1.image = load_image("trava_3.png")
     sprite_side_road1.rect = sprite_side_road1.image.get_rect()
     side_road_left.add(sprite_side_road1)
-    sprite_side_road1.rect.x = 0
+    sprite_side_road1.rect.x = 571 - 160
     sprite_side_road1.rect.y = 0
     # левый второй край
     sprite_side_road3 = pygame.sprite.Sprite()
     sprite_side_road3.image = load_image("trava_3.png")
     sprite_side_road3.rect = sprite_side_road3.image.get_rect()
     side_road_left.add(sprite_side_road3)
-    sprite_side_road3.rect.x = 0
+    sprite_side_road3.rect.x = 571 - 160
     sprite_side_road3.rect.y = -798
     # правый первый край
     side_road_right = pygame.sprite.Group()
@@ -141,14 +141,14 @@ if __name__ == '__main__':
     sprite_side_road2.image = load_image("trava_4.png")
     sprite_side_road2.rect = sprite_side_road2.image.get_rect()
     side_road_right.add(sprite_side_road2)
-    sprite_side_road2.rect.x = 400 + indent_x
+    sprite_side_road2.rect.x = 400 + 571
     sprite_side_road2.rect.y = 0
     # правый второй край
     sprite_side_road4 = pygame.sprite.Sprite()
     sprite_side_road4.image = load_image("trava_4.png")
     sprite_side_road4.rect = sprite_side_road4.image.get_rect()
     side_road_right.add(sprite_side_road4)
-    sprite_side_road4.rect.x = 400 + indent_x
+    sprite_side_road4.rect.x = 400 + 571
     sprite_side_road4.rect.y = -798
     # первая дорога
     all_sprites = pygame.sprite.Group()
@@ -196,7 +196,7 @@ if __name__ == '__main__':
         tree.image = png_files[f"tree_{random.randint(1, 19)}.png"]
         tree.rect = car.image.get_rect()
         tree_group_1.add(tree)
-        tree.rect.x = 10
+        tree.rect.x = 10 + indent_x - 162
         tree.rect.y = -160 * i - 100
     tree_group_2 = pygame.sprite.Group()
     for i in range(5):
@@ -204,7 +204,7 @@ if __name__ == '__main__':
         tree.image = png_files[f"tree_{random.randint(1, 19)}.png"]
         tree.rect = car.image.get_rect()
         tree_group_2.add(tree)
-        tree.rect.x = 580
+        tree.rect.x = 580 + indent_x - 162
         tree.rect.y = -200 * i
 
     speed = 3  # скорость машинки
@@ -227,6 +227,8 @@ if __name__ == '__main__':
     end_music = pygame.mixer.Sound('music\music_end.mp3')
     music_boom = pygame.mixer.Sound('music\music_boom.mp3')
     motor_music = pygame.mixer.Sound('music\motor.mp3')
+    music_boom.set_volume(0.4)
+    motor_music.set_volume(0.3)
     pygame.mixer.Sound.play(main_music)
     speed_time_limit = 0
     while running:
