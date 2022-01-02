@@ -3,8 +3,6 @@ import os
 import sys
 import random
 import time
-from threading import *
-from pygame.locals import *
 
 
 def load_image(name, colorkey=None):  # открытие картинки
@@ -65,6 +63,46 @@ def show_fon_trees_real(group, screen, speed):
         if i.rect.y >= 796:
             i.rect.y = -170
             i.image = png_files[f"tree_{random.randint(1, 19)}.png"]
+
+
+def pausa(screen, distance, time_road, start_time1, start_time2):
+    x_pere = 409
+    screen.fill((0, 0, 0))
+    image = pygame.image.load('picturs\mod_fon.jpg').convert_alpha()
+    screen.blit(image, (409, 0))
+    pygame.draw.rect(screen, (232, 197, 174),
+                     (x_pere + 180, 180, 400, 400))
+    # надпись
+    font = pygame.font.Font(None, 40)
+    text = font.render("TIME LEFT  - ", True, (128, 0, 255))
+    screen.blit(text, [x_pere + 210, 240])
+    text = font.render("DISTANCE LEFT  - ", True, (128, 0, 255))
+    screen.blit(text, [x_pere + 210, 310])
+    text = font.render("MONEY EARNED  - ", True, (128, 0, 255))
+    screen.blit(text, [x_pere + 210, 380])
+    text = font.render("EXIT  -  ESC", True, (255, 79, 0))
+    screen.blit(text, [x_pere + 210, 450])
+    text = font.render("CONTINUE  -  SPACE", True, (255, 79, 0))
+    screen.blit(text, [x_pere + 210, 510])
+    font = pygame.font.Font(None, 50)
+    if time_road % 60 < 10:
+        text = font.render(f"{time_road // 60}:0{time_road % 60}", True, (255, 36, 0))
+        screen.blit(text, [x_pere + 400, 240])
+    else:
+        text = font.render(f"{time_road // 60}:{time_road % 60}", True, (255, 36, 0))
+        screen.blit(text, [x_pere + 400, 240])
+    text = font.render(f"{round(distance)} m", True, (255, 36, 0))
+    screen.blit(text, [x_pere + 460, 305])
+    text = font.render('...', True, (255, 36, 0))  # кол-во денег
+    screen.blit(text, [x_pere + 480, 375])
+    pygame.display.flip()
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:  # управление машинки
+                if event.key == pygame.K_SPACE:
+                    return time.time() - start_time1 - start_time2, False
+                elif event.key == pygame.K_ESCAPE:
+                    return time.time() - start_time1 - start_time2, True
 
 
 if __name__ == '__main__':
@@ -221,16 +259,20 @@ if __name__ == '__main__':
     end_time = 0
     distance = 2000  # дистанцию которую надо пройти
     # музыка
+    pygame.mixer.music.load(f'music\music_{random.randint(1, 10)}.mp3')
+    pygame.mixer.music.set_volume(0.5)
+    pygame.mixer.music.play()
     start_music = pygame.mixer.Sound('music\start_music.mp3')
-    main_music = pygame.mixer.Sound(f'music\music_{random.randint(1, 10)}.mp3')
-    main_music.set_volume(0.5)
     end_music = pygame.mixer.Sound('music\music_end.mp3')
     music_boom = pygame.mixer.Sound('music\music_boom.mp3')
     motor_music = pygame.mixer.Sound('music\motor.mp3')
     music_boom.set_volume(0.4)
     motor_music.set_volume(0.3)
-    pygame.mixer.Sound.play(main_music)
     speed_time_limit = 0
+    # другое
+    paus_time = 0
+    is_stop = False
+    is_end = False
     while running:
         if health == 0:
             speed = 0
@@ -270,10 +312,18 @@ if __name__ == '__main__':
                             if speed != 3:
                                 speed -= 1
                         if event.key == pygame.K_z:
-                            pygame.mixer.Sound.stop(main_music)
-                            main_music = pygame.mixer.Sound(f'music\music_{random.randint(1, 10)}.mp3')
-                            main_music.set_volume(0.5)
-                            pygame.mixer.Sound.play(main_music)
+                            pygame.mixer.music.load(f'music\music_{random.randint(1, 10)}.mp3')
+                            pygame.mixer.music.set_volume(0.5)
+                            pygame.mixer.music.play()
+                        if event.key == pygame.K_SPACE:
+                            pygame.mixer.music.pause()
+                            rrr, is_end = pausa(screen, distance,
+                                                round(limited_time - (time.time() - start_time - paus_time)),
+                                                start_time, time.time() - start_time)
+                            pygame.mixer.music.unpause()
+                            paus_time += rrr
+                        if event.key == pygame.K_ESCAPE:
+                            is_end = True
                     if event.type == pygame.KEYUP:
                         if event.key == pygame.K_d:
                             directions['right'] = False
@@ -319,7 +369,7 @@ if __name__ == '__main__':
                 sprite1.rect.y = -797
             if sprite2.rect.y >= 796 - speed - 1:
                 sprite2.rect.y = -797
-            if start:  # main
+            if start:  # maind  d
                 if k > 0:  # рисуем start
                     k -= 1
                     font = pygame.font.Font(None, 80)
@@ -347,14 +397,14 @@ if __name__ == '__main__':
                     kol_stol += 1
                     health -= 1
                     if health == 0:
-                        pygame.mixer.Sound.stop(main_music)
+                        pygame.mixer.music.stop()
                         pygame.mixer.Sound.play(end_music)
                     else:
                         pygame.mixer.Sound.play(music_boom)
                     sec_neuas = 2 * fps  # бесмертие
                     print(kol_stol)
                     print(blocks_hit_list)
-                    end_time = round(limited_time - (time.time() - start_time))  # запечатлить время
+                    end_time = round(limited_time - (time.time() - start_time - paus_time))  # запечатлить время
                 for i in main_car_group:
                     car.rect.x -= 20
                     car.rect.y -= 20
@@ -368,13 +418,29 @@ if __name__ == '__main__':
             car_road.draw(screen)
         distance -= speed * 0.1
         if health != 0:
-            show_up_info(up_info, screen, 6 - health, round(limited_time - (time.time() - start_time)), distance)
+            # print(time.time() - start_time)
+            # print((time.time() - start_time) - paus_time)
+            show_up_info(up_info, screen, 6 - health, round(limited_time - (time.time() - start_time - paus_time)),
+                         distance)
             show_speed(speed_info, screen, speed)
         else:
             show_up_info(up_info, screen, 6 - health, end_time, distance)
             show_speed(speed_info, screen, 3)
         if speed_time_limit != 0:
             speed_time_limit -= 1
+        # проверяем чтобы не было отступов
+        # if sprite1.rect.y < sprite2.rect.y:  # sprite1 наверху
+        #     ras = abs(sprite2.rect.y) + abs(sprite1.rect.y)
+        #     print(ras)
+        #     if ras != 798:
+        #         sprite2.rect.y -= 1
+        # else:  # sprite2 наверху
+        #     ras = abs(sprite2.rect.y) + abs(sprite1.rect.y)
+        #     print(ras)
+        #     if ras != 798:
+        #         sprite1.rect.y -= 1
+        # print(sprite1.rect.y, sprite2.rect.y)
+
         clock.tick(fps)
         pygame.display.flip()
     pygame.quit()
