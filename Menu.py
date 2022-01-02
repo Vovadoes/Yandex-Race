@@ -1,9 +1,10 @@
 import pygame
 
 from Button import Button
+from Save import Save
 from Starter import Starter
 from functions import load_image
-from Map import map
+from Map_display import map_display
 
 
 def menu(screen, size):
@@ -32,7 +33,8 @@ def menu(screen, size):
 
     button = Button("Кнопка.png", k_image_width, k_image_height, all_sprites)
     button.set_text("Новая игра")
-    button.starter = Starter(map)
+    save = Save()
+    button.starter = Starter(map_display, save=save, size=size, screen=screen)
     buttons.append(button)
 
     button = Button("Кнопка.png", k_image_width, k_image_height, all_sprites)
@@ -55,7 +57,7 @@ def menu(screen, size):
 
     # Размещение на экране
     l = len(buttons)
-    r = (buttons_xp - sum([i.rect.height for i in buttons])) / (l+1)
+    r = (buttons_xp - sum([i.rect.height for i in buttons])) / (l + 1)
     x = heading_xp + r
     for i in range(l):
         buttons[i].rect.x = (size[0] - buttons[i].rect.width) // 2
@@ -87,3 +89,4 @@ def menu(screen, size):
             i.render_text(screen)
         clock.tick(fps)
         pygame.display.flip()
+    return None
