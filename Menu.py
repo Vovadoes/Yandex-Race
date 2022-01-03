@@ -5,6 +5,7 @@ from Save import Save
 from Starter import Starter
 from functions import load_image
 from Map_display import map_display
+from Image import Image
 
 
 def menu(screen, size):
@@ -31,25 +32,25 @@ def menu(screen, size):
     # инициализация кнопок
     buttons = []
 
-    button = Button("Кнопка.png", k_image_width, k_image_height, all_sprites)
+    button = Button(Image("Кнопка.png"), k_image_width, k_image_height, all_sprites)
     button.set_text("Новая игра")
     save = Save()
     button.starter = Starter(map_display, save=save, size=size, screen=screen)
     buttons.append(button)
 
-    button = Button("Кнопка.png", k_image_width, k_image_height, all_sprites)
+    button = Button(Image("Кнопка.png"), k_image_width, k_image_height, all_sprites)
     button.set_text("Продолжить")
     buttons.append(button)
 
-    button = Button("Кнопка.png", k_image_width, k_image_height, all_sprites)
+    button = Button(Image("Кнопка.png"), k_image_width, k_image_height, all_sprites)
     button.set_text("Сохранения")
     buttons.append(button)
 
-    button = Button("Кнопка.png", k_image_width, k_image_height, all_sprites)
+    button = Button(Image("Кнопка.png"), k_image_width, k_image_height, all_sprites)
     button.set_text("Настройки")
     buttons.append(button)
 
-    button = Button("Кнопка.png", k_image_width, k_image_height, all_sprites)
+    button = Button(Image("Кнопка.png"), k_image_width, k_image_height, all_sprites)
     button.set_text("Выйти")
     button.starter = Starter(lambda: None)
     buttons.append(button)
@@ -76,7 +77,7 @@ def menu(screen, size):
             if event.type == pygame.MOUSEMOTION:
                 for button in buttons:
                     if button.rect.collidepoint(event.pos):
-                        button.change_picture("Кнопка светлая.png", k_image_width, k_image_height)
+                        button.change_picture(Image("Кнопка светлая.png"), k_image_width, k_image_height)
                     else:
                         button.set_deafult()
             if event.type == pygame.MOUSEBUTTONDOWN:
