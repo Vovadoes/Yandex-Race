@@ -1,11 +1,83 @@
+import math
 from heapq import *
+from pprint import pprint
+from typing import Union
 
-graph = {'A': [(2, 'M'), (3, 'P')],
-         'M': [(2, 'A'), (2, 'N')],
-         'N': [(2, 'M'), (2, 'B')],
-         'P': [(3, 'A'), (4, 'B')],
-         'B': [(4, 'P'), (2, 'N')]}
+from Mark import Crossroad, Locality
 
+
+def distance(x1, y1, x2, y2):
+    return math.sqrt(((x1 - x2) ** 2) + ((y1 - y2) ** 2))
+
+
+def mark_conversion(graph: dict[Union[Locality, Crossroad], Union[
+    list[Crossroad], list[Union[Locality, Crossroad]], list[Locality]]]):
+    dct1 = {}
+    graph_new = {}
+
+    for i in graph:
+        if (i.x, i.y) not in dct1:
+            dct1[(i.x, i.y)] = i
+        graph_new[(i.x, i.y)] = []
+        for j in graph[i]:
+            graph_new[(i.x, i.y)].append((j.x, j.y))
+            if (j.x, j.y) not in dct1:
+                dct1[(j.x, j.y)] = j
+
+    pprint(dct1)
+    print()
+    pprint(graph_new)
+    graph = graph_new
+    print()
+    graph_new = {}
+
+    for i in graph:
+        if i not in graph_new:
+            graph_new[i] = []
+        for j in graph[i]:
+            graph_new[i].append(j)
+            if j not in graph_new:
+                graph_new[j] = [i]
+            else:
+                graph_new[j].append(i)
+
+    pprint(graph_new)
+    print()
+    graph = graph_new
+    graph_new = {}
+
+    for i in graph:
+        if i not in graph_new:
+            graph_new[i] = []
+        for j in graph[i]:
+            graph_new[i].append((distance(*i, *j), j))
+
+    pprint(graph_new)
+    print()
+    graph = graph_new
+    graph_new = {}
+
+    for i in graph:
+        if i not in graph_new:
+            graph_new[dct1[i]] = []
+        for j in graph[i]:
+            graph_new[dct1[i]].append((j[0], dct1[j[1]]))
+
+    pprint(graph_new)
+    print()
+    return dct1, graph_new
+
+
+graph = {
+    Locality(238, 165): [Crossroad(238, 284)],
+    Crossroad(238, 284): [Crossroad(330, 284), Locality(161, 284)],
+    Crossroad(330, 284): [Crossroad(330, 304)],
+    Crossroad(330, 304): [Locality(330, 398), Locality(568, 304)],
+    Locality(568, 304): [Locality(602, 304)],
+    Locality(602, 304): [Crossroad(602, 353)],
+    Locality(330, 398): [Crossroad(366, 398)],
+    Crossroad(366, 398): [Locality(366, 440)]
+}
 
 def dijkstra(start, goal, graph):
     queue = []
@@ -30,12 +102,14 @@ def dijkstra(start, goal, graph):
     return visited
 
 
-start = 'A'
-goal = 'B'
-visited = dijkstra(start, goal, graph)
+def find_way():
+    dct1, graph_new = mark_conversion(graph)
+    start = dct1[(161, 284)]
+    goal = dct1[(366, 440)]
+    visited = dijkstra(start, goal, graph_new)
 
-cur_node = goal
-print(f'\npath from {goal} to {start}: \n {goal} ', end='')
-while cur_node != start:
-    cur_node = visited[cur_node]
-    print(f'---> {cur_node} ', end='')
+    cur_node = goal
+    print(f'\npath from {goal} to {start}: \n {goal} ', end='')
+    while cur_node != start:
+        cur_node = visited[cur_node]
+        print(f'---> {cur_node} ', end='')
