@@ -1,10 +1,9 @@
-from typing import Tuple
-
 import pygame
 
 from Button import Button
 from Save import Save
 from functions import load_image
+from Image import Image
 
 
 def map_display(screen, size: tuple[int, int], save: Save):
@@ -25,7 +24,7 @@ def map_display(screen, size: tuple[int, int], save: Save):
 
     buttons = []
 
-    button = Button("Метка.png", k_image_width, k_image_height, all_sprites)
+    button = Button(Image("Метка.png"), k_image_width, k_image_height, all_sprites)
     button.rect.x = size[0] // 2 - button.rect.width // 2
     button.rect.y = size[1] // 2 - button.rect.height
     buttons.append(button)
@@ -41,7 +40,7 @@ def map_display(screen, size: tuple[int, int], save: Save):
             if event.type == pygame.MOUSEMOTION:
                 for button in buttons:
                     if button.rect.collidepoint(event.pos):
-                        button.change_picture("Метка активная.png", k_image_width, k_image_height)
+                        button.change_picture(Image("Метка активная.png"), k_image_width, k_image_height)
                         button.rect.x = size[0] // 2 - button.rect.width // 2
                         button.rect.y = size[1] // 2 - button.rect.height
                     else:
