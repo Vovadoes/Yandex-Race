@@ -26,7 +26,6 @@ def map_display(screen, size: tuple[int, int], save: Save):
     buttons = []
 
     button = Button("Метка.png", k_image_width, k_image_height, all_sprites)
-    # button.set_text("Продолжить")
     button.rect.x = size[0] // 2 - button.rect.width // 2
     button.rect.y = size[1] // 2 - button.rect.height
     buttons.append(button)

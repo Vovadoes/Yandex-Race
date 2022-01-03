@@ -51,6 +51,7 @@ def menu(screen, size):
 
     button = Button("Кнопка.png", k_image_width, k_image_height, all_sprites)
     button.set_text("Выйти")
+    button.starter = Starter(lambda: None)
     buttons.append(button)
 
     del button
@@ -64,7 +65,7 @@ def menu(screen, size):
         buttons[i].rect.y = x
         x += r + buttons[i].rect.height
 
-    fps = 30
+    fps = 60
     running = True
     clock = pygame.time.Clock()
 
