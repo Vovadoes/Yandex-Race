@@ -3,9 +3,8 @@ import pygame
 from Button import Button
 from Save import Save
 from Starter import Starter
-from functions import load_image
 from Map_display import map_display
-from Image import Image
+from Image import Image, load_image
 
 
 def menu(screen, size):
