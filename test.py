@@ -3,7 +3,9 @@ from heapq import *
 from pprint import pprint
 from typing import Union
 
+from Image import Image
 from Mark import Crossroad, Locality
+from Road import Map
 
 
 def distance(x1, y1, x2, y2):
@@ -79,6 +81,7 @@ graph = {
     Crossroad(366, 398): [Locality(366, 440)]
 }
 
+
 def dijkstra(start, goal, graph):
     queue = []
     heappush(queue, (0, start))
@@ -113,3 +116,21 @@ def find_way():
     while cur_node != start:
         cur_node = visited[cur_node]
         print(f'---> {cur_node} ', end='')
+
+
+# image_map = Image("Maps/map1/map.jpg")
+# m = Map(image_map)
+# m.set_graph(graph)
+# m.save('map1')
+
+print(round(2.5))
+
+a = Locality(12, 12)
+b = Locality(12, 12)
+
+print(hash(a), hash(b))
+
+print(a == b)
+
+dct = {a: []}
+print(dct[b])
