@@ -118,19 +118,22 @@ def find_way():
         print(f'---> {cur_node} ', end='')
 
 
-# image_map = Image("Maps/map1/map.jpg")
-# m = Map(image_map)
-# m.set_graph(graph)
-# m.save('map1')
+image_map = Image("Maps/map1/map.jpg")
+m = Map(image_map)
+m.set_graph(graph)
+m.save('map1')
 
-print(round(2.5))
-
-a = Locality(12, 12)
-b = Locality(12, 12)
-
-print(hash(a), hash(b))
-
-print(a == b)
-
-dct = {a: []}
-print(dct[b])
+# a = [1,2,34,45]
+# print(a[:len(a):])
+#
+# print(round(2.5))
+#
+# a = Locality(12, 12)
+# b = Locality(12, 12)
+#
+# print(hash(a), hash(b))
+#
+# print(a == b)
+#
+# dct = {a: []}
+# print(dct[b])

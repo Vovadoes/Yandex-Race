@@ -21,10 +21,11 @@ class Map(pygame.sprite.Sprite):
         self.rect.x = 0
         self.rect.y = 0
         self.start = Locality(238, 165)
-        self.starter = None
         self.graph = None
         self.conversion_graph = None
         self.dct_points = None
+        self.PX_KM = None  # Сколько пикселей в 1ом километре
+        self.MONEY_KM = None  # колиство монет за 1 км
 
     def set_graph(self, graph):
         self.graph = graph
@@ -38,6 +39,8 @@ class Map(pygame.sprite.Sprite):
         pickle.dump(self.dct_points, open(self.save_path.format(name, 'dct_points.txt'), 'wb+'))
         pickle.dump(self.conversion_graph,
                     open(self.save_path.format(name, 'conversion_graph.txt'), 'wb+'))
+        lst_const = [self.PX_KM, self.MONEY_KM]
+        pickle.dump(lst_const, open(self.save_path.format(name, 'info.txt'), 'wb+'))
 
     def load(self, name=None):
         if name is None:
@@ -47,6 +50,21 @@ class Map(pygame.sprite.Sprite):
         self.dct_points = pickle.load(open(self.save_path.format(name, 'dct_points.txt'), 'rb'))
         self.conversion_graph = pickle.load(
             open(self.save_path.format(name, 'conversion_graph.txt'), 'rb'))
+        self.PX_KM, self.MONEY_KM = pickle.load(open(self.save_path.format(name, 'info.txt'), 'rb'))
+
+
+class Text:
+    def __init__(self, text, x=0, y=0, height=10):
+        self.text = text
+        self.value = ['None']
+        self.height = height
+        self.x = x
+        self.y = y
+
+    def render(self, screen, color=(255, 204, 0)):
+        font = pygame.font.Font(None, self.height)
+        render = font.render(self.text + str(''.join([str(i) for i in self.value])), True, color)
+        screen.blit(render, (self.x, self.y))
 
 
 def distance(coords, coords_last):
@@ -59,6 +77,7 @@ class Road:
         self.finish = finish
         self.way = None
         self.distance = None
+        self.money = 0
 
     def find_way(self, graph):
         visited = dijkstra(self.start, self.finish, graph)
