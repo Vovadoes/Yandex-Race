@@ -1,11 +1,12 @@
 from Button import Button
-from Image import Image
+from Car import ClassCar
 
 
 class Mark:
-    def __init__(self, x: int = 0, y: int = 0, button: Button = None):
+    def __init__(self, x: int = 0, y: int = 0, button: Button = None, class_car: ClassCar = None):
         self.x = x
         self.y = y
+        self.class_car = class_car
         self.button = button
         if button is not None:
             self.centering((self.x, self.y))

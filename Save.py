@@ -11,7 +11,7 @@ class Save:
     def __init__(self, starter=None):
         self.starter = starter
         self.road_and_car = {}
-        self.info = {'date': datetime.datetime.now(), 'name': 'None'}
+        self.info = {'date': datetime.datetime.now(), 'name': 'None', 'max_level_car': 0}
 
     def save(self, name: str):
         self.info['name'] = name
