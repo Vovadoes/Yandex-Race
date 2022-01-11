@@ -20,8 +20,7 @@ class Save:
         full_way = os.path.join(self.directory, self.info['name'])
         if not os.path.exists(full_way):
             os.makedirs(full_way)
-        pickle.dump(self.road_and_car,
-                    open(os.path.join(full_way, "road_and_car.txt"), 'wb+'))
+        pickle.dump(self.road_and_car, open(os.path.join(full_way, "road_and_car.txt"), 'wb+'))
         json.dump(self.info, open(os.path.join(full_way, "info.json"), 'w+', encoding='UTF-8'),
                   default=json_util.default)
 

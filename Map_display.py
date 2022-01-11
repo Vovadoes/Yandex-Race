@@ -1,3 +1,5 @@
+import pickle
+
 import pygame
 
 from Button import Button
@@ -7,7 +9,8 @@ from Car import classes_car
 from Image import Image
 from Road import Map, Road, Text
 from random import choice
-from Choosing_car import  choosing_car
+from Choosing_car import choosing_car
+import pickle
 
 from Starter import Starter
 
@@ -96,12 +99,15 @@ def map_display(screen, size: tuple[int, int], save: Save):
                             road.money = int(texts['money'].value[0])
                             if way[-1] == points[finish]:
                                 starter = Starter(choosing_car, screen, size, save, road)
+                                pickle.dump((save, road),
+                                            open('Tools/stat_save_road_car.txt', 'wb+'))
                                 return starter
                         way = road.find_way(maps.conversion_graph)
                         distance = road.get_distance()
                         texts['distance'].value = [str(int(distance / maps.PX_KM)), ' км']
-                        texts['money'].value = [str(int(int(texts['distance'].value[0]) * maps.MONEY_KM)),
-                                                ' шт']
+                        texts['money'].value = [
+                            str(int(int(texts['distance'].value[0]) * maps.MONEY_KM)),
+                            ' шт']
                         texts['class'].value = [mark.class_car.name]
                         print(way)
                         break
