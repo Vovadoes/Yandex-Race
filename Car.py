@@ -2,6 +2,7 @@ import json
 import pickle
 import os
 
+from Button import Button
 from Image import Image
 
 from bson import json_util
@@ -21,17 +22,27 @@ classes_car.append(ClassCar("Премиум", 2))
 class Car:
     path_save = "Cars"
 
-    def __init__(self, basic_image: Image = None, mask: Image = None, class_car: ClassCar = None):
+    def __init__(self, basic_image: Button = None, mask: Button = None, class_car: ClassCar = None):
         self.basic_image = basic_image
-        self.images: list[Image] = []
+        self.images: list[Button] = []
         self.class_car: ClassCar = class_car
-        self.mask: Image = mask
-        self.info = {'name': 'None', 'path_basic_image': 'basic_image.png', 'path_images': 'image/',
-                     'path_class_car': 'class_car.txt', 'path_mask': 'basic_image.png'}
+        self.mask: Button = mask
+        self.specifications = {"max_speed": 10, "boost": 10}
+        self.info = {'name': 'None', 'path_basic_image': 'basic_image.png', 'path_images': 'images',
+                     'path_class_car': 'class_car.txt', 'path_mask': 'basic_image.png',
+                     'path_info': 'info.json', "path_specifications": "specifications.txt"}
 
-    def load(self):
-        for i in os.listdir(os.path.join(self.path_save, self.info['path_images'])):
-            self.images.append(Image(os.path.join(self.path_save, self.info['path_images'], i)))
+    def load(self, name):
+        full_path = os.path.join(self.path_save, name)
+        self.info = json.load(open(os.path.join(full_path, self.info['path_info']), 'rb'))
+        self.basic_image = Button(Image(os.path.join(full_path, self.info["path_basic_image"])))
+        for i in os.listdir(os.path.join(full_path, self.info['path_images'])):
+            self.images.append(Button(Image(os.path.join(full_path, self.info['path_images'], i))))
+        self.class_car = pickle.load(
+            open(os.path.join(full_path, self.info["path_class_car"]), 'rb'))
+        self.mask = Button(Image(os.path.join(full_path, self.info["path_mask"])))
+        self.specifications = pickle.load(
+            open(os.path.join(full_path, self.info["path_specifications"]), 'rb'))
         return self
 
     def save(self, name: str):
@@ -41,3 +52,6 @@ class Car:
                   default=json_util.default)
         pickle.dump(self.class_car,
                     open(os.path.join(self.path_save, name, self.info['path_class_car']), 'wb+'))
+        pickle.dump(self.specifications,
+                    open(os.path.join(self.path_save, name, self.info['path_specifications']),
+                         'wb+'))
