@@ -55,7 +55,7 @@ def map_display(screen, size: tuple[int, int], save: Save):
     for tupl in points:
         if type(points[tupl]) is Locality:
             mark = Mark(
-                button=Button(Image("Метка.png"), k_image_width, k_image_height, marks_sprites),
+                button=Button(Image("data/Метка.png"), k_image_width, k_image_height, marks_sprites),
                 class_car=choice(classes_car))
             mark.centering(points[tupl].get_coords(k_image_width, k_image_height))
             marks.append(mark)
@@ -83,7 +83,7 @@ def map_display(screen, size: tuple[int, int], save: Save):
             if event.type == pygame.MOUSEMOTION:
                 for mark in marks:
                     if mark.button.rect.collidepoint(event.pos):
-                        mark.button.change_picture(Image("Метка активная.png"), k_image_width,
+                        mark.button.change_picture(Image("data/Метка активная.png"), k_image_width,
                                                    k_image_height)
                         mark.centering()
                     else:
