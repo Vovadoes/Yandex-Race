@@ -5,10 +5,7 @@ import pygame
 
 
 def load_image(name, colorkey=None):
-    if name[0] == '.':
-        fullname = name
-    else:
-        fullname = os.path.join('data', name)
+    fullname = name
     # если файл не существует, то выходим
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
@@ -23,8 +20,8 @@ class Image:
         self.path = path
         self.name = os.path.basename(path)
 
-    def transform(self, k_image_width, k_image_height):
-        self.image = pygame.transform.scale(self.image, (int(k_image_width), int(k_image_height)))
+    def transform(self, width, height):
+        self.image = pygame.transform.scale(self.image, (int(width), int(height)))
 
     def __eq__(self, other):
         return self.path == other.path

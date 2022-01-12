@@ -3,13 +3,13 @@ from Image import Image
 
 
 class Button(pygame.sprite.Sprite):
-    def __init__(self, image: Image, k_image_width=1, k_image_height=1, *group):
+    def __init__(self, image: Image, k_image_width=1, k_image_height=1, group=(), x=0, y=0):
         self.deafult_k_image_width = k_image_width
         self.deafult_k_image_height = k_image_height
         self.deafult_image = image
         self.last_image = None
-        self.change_picture(self.deafult_image, k_image_width, k_image_height, 0, 0)
-        super().__init__(*group)
+        self.change_picture(self.deafult_image, k_image_width, k_image_height, x, y)
+        super().__init__(group)
         self.text = None
         self.starter = None
 
