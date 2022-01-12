@@ -1,23 +1,22 @@
 import pygame
 
-x = 0
-running = True
-directions = {"right": False, "left": False}
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
-                directions['right'] = True
-            elif event.key == pygame.K_LEFT:
-                directions['left'] = True
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_RIGHT:
-                directions['right'] = False
-            elif event.key == pygame.K_LEFT:
-                directions['left'] = False
-    if directions['right']:
-        x += 3
-    if directions['left']:
-        x -= 3
+if __name__ == '__main__':
+    pygame.init()
+    size = width, height = 1542, 799
+    screen = pygame.display.set_mode(size)
+
+    running = True
+    while running:
+        # внутри игрового цикла ещё один цикл
+        # приема и обработки сообщений
+        for event in pygame.event.get():
+            # при закрытии окна
+            if event.type == pygame.QUIT:
+                running = False
+
+        # отрисовка и изменение свойств объектов
+        # ...
+
+        # обновление экрана
+        pygame.display.flip()
+    pygame.quit()
