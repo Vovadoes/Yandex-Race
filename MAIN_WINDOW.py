@@ -224,9 +224,9 @@ def win_game(screen, distance, time_rr, money_k, winning_money):  # конец �
 
 def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Car):
     # def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limited_time, distance, winning_money):
-    left_pictur = car_obj.images[0].image
-    right_pictur = car_obj.images[1].image
-    rect_pictur = car_obj.mask.image
+    left_pictur = car_obj.images[0].last_image.path
+    right_pictur = car_obj.images[1].last_image.path
+    rect_pictur = car_obj.mask.last_image.path
     max_speed = car_obj.specifications["max_speed"]
     time_run = 3
     limited_time = 1000
@@ -309,9 +309,9 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
     # машинка
     main_car_group = pygame.sprite.Group()
     car = pygame.sprite.Sprite()
-    car.image = right_pictur
-    car.rect = car_obj.basic_image.rect
-    car.image = left_pictur
+    car.image = load_image(rect_pictur)
+    car.rect = car.image.get_rect()
+    car.image = png_files[left_pictur]
     main_car_group.add(car)
     car.rect.x = 160 + indent_x  # 160
     car.rect.y = 800  # 800
