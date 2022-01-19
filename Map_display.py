@@ -76,6 +76,8 @@ def map_display(screen, size: tuple[int, int], save: Save):
     running = True
     clock = pygame.time.Clock()
 
+    road = None
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -94,14 +96,14 @@ def map_display(screen, size: tuple[int, int], save: Save):
                     if mark.button.rect.collidepoint(event.pos):
                         finish = mark.get_coords(1 / k_image_width, 1 / k_image_height)
                         finish = round(finish[0]), round(finish[1])
-                        road = Road(start_point, points[finish])
-                        if len(way) != 0:
+                        if road is not None:
                             road.money = int(texts['money'].value[0])
                             if way[-1] == points[finish]:
                                 starter = Starter(choosing_car, screen, size, save, road)
                                 pickle.dump((save, road),
                                             open('Tools/stat_save_road_car.txt', 'wb+'))
                                 return starter
+                        road = Road(start_point, points[finish])
                         way = road.find_way(maps.conversion_graph)
                         distance = road.get_distance()
                         texts['distance'].value = [str(int(distance / maps.PX_KM)), ' км']
