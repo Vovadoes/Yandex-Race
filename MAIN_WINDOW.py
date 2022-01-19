@@ -3,6 +3,7 @@ import os
 import sys
 import random
 import time
+from Car import Car
 
 
 def load_image(name, colorkey=None):  # открытие картинки
@@ -211,6 +212,7 @@ def win_game(screen, distance, time_rr, money_k, winning_money):  # конец �
 
 
 def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limited_time, distance, winning_money):
+    # screen, size: tuple[int, int], save: Save, road: Road, car: Car
     # winning_money = 100  # деньги которые он выйграет
     indent_x = 571
     animation_set = [pygame.image.load(f"picturs\money\money_{i}.png") for i in range(0, 8)]

@@ -7,6 +7,8 @@ from Car import Car
 from Image import Image
 from Road import Road
 from Save import Save
+from MAIN_WINDOW import main_game
+from Starter import Starter
 
 
 def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
@@ -62,6 +64,9 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
             if event.type == pygame.MOUSEMOTION:
                 pass
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if cars[index_car].basic_image.rect.collidepoint(event.pos):
+                    starter = Starter(main_game, screen, size, save, road, cars[index_car])
+                    return starter
                 if button_left.rect.collidepoint(event.pos):
                     index_car = (index_car - 1) % len(cars)
                     print("button_left")
