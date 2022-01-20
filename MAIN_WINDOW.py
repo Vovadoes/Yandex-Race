@@ -18,6 +18,16 @@ def load_image(name, colorkey=None):  # открытие картинки
     return image
 
 
+def load_image_free(name, colorkey=None):  # открытие картинки
+    fullname = name
+    # если файл не существует, то выходим
+    if not os.path.isfile(fullname):
+        print(f"Файл с изображением '{fullname}' не найден")
+        sys.exit()
+    image = pygame.image.load(fullname)
+    return image
+
+
 indent_x = 571
 png_files = {'break_car_taxi_2.png': load_image("break_car_taxi_2.png"),
              'break_car_taxi_1.png': load_image("break_car_taxi_1.png"),
@@ -228,7 +238,7 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
     right_pictur = car_obj.images[1].last_image.path
     rect_pictur = car_obj.mask.last_image.path
     max_speed = car_obj.specifications["max_speed"]
-    time_run = car_obj.specifications["boost"] # разгон
+    time_run = car_obj.specifications["boost"]  # разгон
     limited_time = road.time
     distance = road.distance
     winning_money = 10
@@ -236,10 +246,10 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
     # winning_money = 100  # деньги которые он выйграет
     indent_x = 571
     animation_set = [pygame.image.load(f"picturs\money\money_{i}.png") for i in range(0, 8)]
-    # pygame.init()  # создаем окно
-    # pygame.display.set_caption('Yandex_Race')
-    # size = width, height = 400 + 571 * 2, 799
-    # screen = pygame.display.set_mode(size)
+    pygame.init()  # создаем окно
+    pygame.display.set_caption('Yandex_Race')
+    size = width, height = 400 + 571 * 2, 799
+    screen = pygame.display.set_mode(size)
 
     running = True
     fps = 60  # пикселей в секунду
@@ -309,9 +319,9 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
     # машинка
     main_car_group = pygame.sprite.Group()
     car = pygame.sprite.Sprite()
-    car.image = load_image(rect_pictur)
+    car.image = load_image_free(rect_pictur)
     car.rect = car.image.get_rect()
-    car.image = png_files[left_pictur]
+    car.image = load_image_free(left_pictur)
     main_car_group.add(car)
     car.rect.x = 160 + indent_x  # 160
     car.rect.y = 800  # 800
@@ -464,7 +474,7 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
                                 pygame.mixer.music.pause()
                                 rrr, is_end = pausa(screen, distance,
                                                     round(limited_time - (
-                                                                time.time() - start_time - paus_time)),
+                                                            time.time() - start_time - paus_time)),
                                                     start_time, time.time() - start_time, koll_money)
                                 pygame.mixer.music.unpause()
                                 paus_time += rrr
@@ -482,10 +492,10 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
                         if car.rect.x >= 10 + indent_x:
                             car.rect.x -= 5
                     if car.rect.x >= 220 + indent_x and sec_neuas == 0:  # изменение изображения
-                        car.image = png_files[right_pictur]
+                        car.image = load_image_free(right_pictur)
                         what_was = right_pictur
                     if car.rect.x <= 120 + indent_x and sec_neuas == 0:
-                        car.image = png_files[left_pictur]
+                        car.image = load_image_free(left_pictur)
                         what_was = left_pictur
                 else:
                     for event in pygame.event.get():
@@ -637,7 +647,7 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
                     sec_neuas -= 1
                     car.image = png_files["legend.png"]
                 else:
-                    car.image = png_files[what_was]
+                    car.image = load_image_free(what_was)
                 # взаимодействие с бонусами
                 if not is_win:
                     if pygame.sprite.spritecollideany(car, hill_group):

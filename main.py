@@ -10,7 +10,7 @@ from Starter import Starter
 
 if __name__ == '__main__':
     pygame.init()
-    size = width, height = 1028, 578
+    size = width, height = 1542, 799
     screen = pygame.display.set_mode(size)
 
     starter = Starter(menu, screen, size)
