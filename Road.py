@@ -66,6 +66,9 @@ class Text:
         render = font.render(self.text + str(''.join([str(i) for i in self.value])), True, color)
         screen.blit(render, (self.x, self.y))
 
+    def __str__(self):
+        return self.text + str(''.join([str(i) for i in self.value]))
+
 
 def distance(coords, coords_last):
     return math.sqrt(((coords[0] - coords_last[0]) ** 2) + ((coords[1] - coords_last[1]) ** 2))
@@ -78,6 +81,7 @@ class Road:
         self.way = None
         self.distance = None
         self.money = 0
+        self.time = 60
 
     def find_way(self, graph):
         visited = dijkstra(self.start, self.finish, graph)

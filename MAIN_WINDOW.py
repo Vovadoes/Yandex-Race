@@ -4,6 +4,8 @@ import sys
 import random
 import time
 from Car import Car
+from Road import Road
+from Save import Save
 
 
 def load_image(name, colorkey=None):  # открытие картинки
@@ -19,10 +21,14 @@ def load_image(name, colorkey=None):  # открытие картинки
 indent_x = 571
 png_files = {'break_car_taxi_2.png': load_image("break_car_taxi_2.png"),
              'break_car_taxi_1.png': load_image("break_car_taxi_1.png"),
-             'real_car.png': load_image("real_car.png"), 'real_car2.png': load_image("real_car2.png"),
-             'break_car_road.png': load_image("break_car_road.png"), 'legend.png': load_image("legend.png"),
-             'roud_car_1.png': load_image(f"roud_car_1.png"), 'roud_car_2.png': load_image(f"roud_car_2.png"),
-             'roud_car_3.png': load_image(f"roud_car_3.png"), 'roud_car_4.png': load_image(f"roud_car_4.png"),
+             'real_car.png': load_image("real_car.png"),
+             'real_car2.png': load_image("real_car2.png"),
+             'break_car_road.png': load_image("break_car_road.png"),
+             'legend.png': load_image("legend.png"),
+             'roud_car_1.png': load_image(f"roud_car_1.png"),
+             'roud_car_2.png': load_image(f"roud_car_2.png"),
+             'roud_car_3.png': load_image(f"roud_car_3.png"),
+             'roud_car_4.png': load_image(f"roud_car_4.png"),
              'roud_car_5.png': load_image(f"roud_car_5.png"), '0_up.png': load_image(f"0_up.png"),
              '1_up.png': load_image(f"1_up.png"), '2_up.png': load_image(f"2_up.png"),
              '3_up.png': load_image(f"3_up.png"), '4_up.png': load_image(f"4_up.png"),
@@ -33,7 +39,8 @@ png_files = {'break_car_taxi_2.png': load_image("break_car_taxi_2.png"),
              'speed_5.png': load_image(f"speed_5.png"), 'speed_6.png': load_image(f"speed_6.png"),
              'speed_7.png': load_image(f"speed_7.png"), 'speed_8.png': load_image(f"speed_8.png"),
              'speed_9.png': load_image(f"speed_9.png"), 'speed_10.png': load_image(f"speed_10.png"),
-             'speed_11.png': load_image(f"speed_11.png"), 'speed_12.png': load_image(f"speed_12.png"),
+             'speed_11.png': load_image(f"speed_11.png"),
+             'speed_12.png': load_image(f"speed_12.png"),
              'trava_3.png': load_image(f"trava_3.png"), 'trava_4.png': load_image(f"trava_4.png"),
              'tree_1.png': load_image(f"tree_1.png"), 'tree_2.png': load_image(f"tree_2.png"),
              'tree_3.png': load_image(f"tree_3.png"), 'tree_4.png': load_image(f"tree_4.png"),
@@ -46,10 +53,14 @@ png_files = {'break_car_taxi_2.png': load_image("break_car_taxi_2.png"),
              'tree_17.png': load_image(f"tree_17.png"), 'tree_18.png': load_image(f"tree_18.png"),
              'tree_19.png': load_image(f"tree_19.png"), 'hill.png': load_image(f"hill.png"),
              'shild.png': load_image(f"shild.png"), 'money_0.png': load_image(f"money\money_0.png"),
-             'money_1.png': load_image(f"money\money_1.png"), 'money_2.png': load_image(f"money\money_2.png"),
-             'money_3.png': load_image(f"money\money_3.png"), 'money_4.png': load_image(f"money\money_4.png"),
-             'money_5.png': load_image(f"money\money_5.png"), 'money_6.png': load_image(f"money\money_6.png"),
-             'money_7.png': load_image(f"money\money_7.png"), 'nothing.png': load_image(f"nothing.png")}
+             'money_1.png': load_image(f"money\money_1.png"),
+             'money_2.png': load_image(f"money\money_2.png"),
+             'money_3.png': load_image(f"money\money_3.png"),
+             'money_4.png': load_image(f"money\money_4.png"),
+             'money_5.png': load_image(f"money\money_5.png"),
+             'money_6.png': load_image(f"money\money_6.png"),
+             'money_7.png': load_image(f"money\money_7.png"),
+             'nothing.png': load_image(f"nothing.png")}
 
 
 def show_up_info(up_info, screen, health=0, time_s=0, distance=0):
@@ -211,15 +222,24 @@ def win_game(screen, distance, time_rr, money_k, winning_money):  # конец �
                     return money_k + winning_money
 
 
-def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limited_time, distance, winning_money):
+def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Car):
+    # def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limited_time, distance, winning_money):
+    left_pictur = car_obj.images[0].last_image.path
+    right_pictur = car_obj.images[1].last_image.path
+    rect_pictur = car_obj.mask.last_image.path
+    max_speed = car_obj.specifications["max_speed"]
+    time_run = car_obj.specifications["boost"] # разгон
+    limited_time = road.time
+    distance = road.distance
+    winning_money = 10
     # screen, size: tuple[int, int], save: Save, road: Road, car: Car
     # winning_money = 100  # деньги которые он выйграет
     indent_x = 571
     animation_set = [pygame.image.load(f"picturs\money\money_{i}.png") for i in range(0, 8)]
-    pygame.init()  # создаем окно
-    pygame.display.set_caption('Yandex_Race')
-    size = width, height = 400 + 571 * 2, 799
-    screen = pygame.display.set_mode(size)
+    # pygame.init()  # создаем окно
+    # pygame.display.set_caption('Yandex_Race')
+    # size = width, height = 400 + 571 * 2, 799
+    # screen = pygame.display.set_mode(size)
 
     running = True
     fps = 60  # пикселей в секунду
@@ -443,7 +463,8 @@ def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limit
                             if event.key == pygame.K_SPACE:
                                 pygame.mixer.music.pause()
                                 rrr, is_end = pausa(screen, distance,
-                                                    round(limited_time - (time.time() - start_time - paus_time)),
+                                                    round(limited_time - (
+                                                                time.time() - start_time - paus_time)),
                                                     start_time, time.time() - start_time, koll_money)
                                 pygame.mixer.music.unpause()
                                 paus_time += rrr
@@ -478,7 +499,8 @@ def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limit
                     if peremen_2 != 0:
                         peremen_2 -= 1
                     else:
-                        return win_game(screen, distance_save, time.time() - start_time - paus_time - 6, koll_money,
+                        return win_game(screen, distance_save,
+                                        time.time() - start_time - paus_time - 6, koll_money,
                                         winning_money)
             else:
                 pygame.mixer.Sound.play(start_music)
@@ -590,7 +612,8 @@ def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limit
                 for i in main_car_group:
                     car.rect.x += 20
                     car.rect.y += 20
-                if pygame.sprite.spritecollideany(car, car_road) and sec_neuas == 0:  # сталкивание с машиной
+                if pygame.sprite.spritecollideany(car,
+                                                  car_road) and sec_neuas == 0:  # сталкивание с машиной
                     blocks_hit_list = pygame.sprite.spritecollide(car, car_road, False)
                     blocks_hit_list[0].image = png_files["break_car_road.png"]
                     kol_stol += 1
@@ -604,7 +627,8 @@ def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limit
                     sec_neuas = 2 * fps  # бесмертие
                     print(kol_stol)
                     print(blocks_hit_list)
-                    end_time = round(limited_time - (time.time() - start_time - paus_time))  # запечатлить время
+                    end_time = round(
+                        limited_time - (time.time() - start_time - paus_time))  # запечатлить время
                 for i in main_car_group:
                     car.rect.x -= 20
                     car.rect.y -= 20
@@ -625,7 +649,8 @@ def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limit
                         if bonus_music:
                             musiс_bonus_2.stop()
                             musiс_bonus_3.stop()
-                            musiс_bonus_1 = pygame.mixer.Sound(f'music\аптечка_{random.randint(1, 4)}.mp3')
+                            musiс_bonus_1 = pygame.mixer.Sound(
+                                f'music\аптечка_{random.randint(1, 4)}.mp3')
                             musiс_bonus_1.set_volume(3)
                             vois_down = int(2 * fps)
                             pygame.mixer.Sound.play(musiс_bonus_1)
@@ -637,7 +662,8 @@ def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limit
                         if bonus_music:
                             musiс_bonus_1.stop()
                             musiс_bonus_3.stop()
-                            musiс_bonus_2 = pygame.mixer.Sound(f'music\деньги_{random.randint(1, 5)}.mp3')
+                            musiс_bonus_2 = pygame.mixer.Sound(
+                                f'music\деньги_{random.randint(1, 5)}.mp3')
                             musiс_bonus_2.set_volume(3)
                             vois_down = int(2 * fps)
                             pygame.mixer.Sound.play(musiс_bonus_2)
@@ -649,7 +675,8 @@ def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limit
                         if bonus_music:
                             musiс_bonus_1.stop()
                             musiс_bonus_2.stop()
-                            musiс_bonus_3 = pygame.mixer.Sound(f'music\щит_{random.randint(1, 3)}.mp3')
+                            musiс_bonus_3 = pygame.mixer.Sound(
+                                f'music\щит_{random.randint(1, 3)}.mp3')
                             musiс_bonus_3.set_volume(3)
                             vois_down = int(2 * fps)
                             pygame.mixer.Sound.play(musiс_bonus_3)
@@ -671,7 +698,8 @@ def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limit
             car_road.draw(screen)
         distance -= speed * 0.1
         if health != 0:
-            show_up_info(up_info, screen, 6 - health, round(limited_time - (time.time() - start_time - paus_time)),
+            show_up_info(up_info, screen, 6 - health,
+                         round(limited_time - (time.time() - start_time - paus_time)),
                          distance)
             show_speed(speed_info, screen, speed)
         else:
@@ -698,7 +726,8 @@ def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limit
             pygame.mixer.music.pause()
             pygame.display.flip()
             print(1234)
-            return end_game(screen, distance_save - distance, time.time() - start_time - paus_time, koll_money,
+            return end_game(screen, distance_save - distance, time.time() - start_time - paus_time,
+                            koll_money,
                             winning_money)
 
         # проверяем чтобы не было отступов
@@ -718,6 +747,5 @@ def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limit
         pygame.display.flip()
     pygame.quit()
 
-
 # left_pictur, right_pictur, rect_pictur, max_speed, time_run, limited_time, distance, winning_money
-print(main_game("real_car.png", 'real_car2.png', 'mask.png', 7, 1, 60, 2000, 50))
+# print(main_game("real_car.png", 'real_car2.png', 'mask.png', 7, 1, 60, 2000, 50))
