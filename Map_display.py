@@ -19,6 +19,7 @@ def map_display(screen, size: tuple[int, int], save: Save):
     # создадим группу, содержащую все спрайты
     marks_sprites = pygame.sprite.Group()
     map_sprites = pygame.sprite.Group()
+    buttons_sprites = pygame.sprite.Group()
 
     image_map = Image(Map.save_path.format('map1', 'map.jpg'))
     maps = Map(image_map, map_sprites)
@@ -34,6 +35,8 @@ def map_display(screen, size: tuple[int, int], save: Save):
     Y_CIRCLE = 0
     TEXT_Height = int(60 * k_image_height)
     X_TEXT = int(size[0] - (size[0] - X_CIRCLE) - R_CIRCLE * 0.7)
+    X_BUTTON = int(0.72 * size[0])
+    Y_BUTTON = int(0.93 * size[1])
 
     maps.deafult_image.transform(size[0], size[1])
     maps.image = maps.deafult_image.image
@@ -72,6 +75,14 @@ def map_display(screen, size: tuple[int, int], save: Save):
 
     del y_text
 
+    # !!! Соотношение исправить !!! k !!!
+    button = Button(Image("data/Кнопка.png"), 1, 1)
+    k = size[1] * 0.06 / button.rect.height
+    button = Button(Image("data/Кнопка.png"), k, k, buttons_sprites)
+    button.rect.x = X_BUTTON
+    button.rect.y = Y_BUTTON
+    button.set_text("К выбору машины")
+
     fps = 30
     running = True
     clock = pygame.time.Clock()
@@ -91,18 +102,23 @@ def map_display(screen, size: tuple[int, int], save: Save):
                     else:
                         mark.button.set_deafult()
                         mark.centering()
+                if button.rect.collidepoint(event.pos):
+                    button.change_picture(Image("data/Кнопка светлая.png"),
+                                          button.deafult_k_image_width,
+                                          button.deafult_k_image_height)
+                else:
+                    button.set_deafult()
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if button.rect.collidepoint(event.pos):
+                    if road is not None:
+                        road.money = int(texts['money'].value[0])
+                        starter = Starter(choosing_car, screen, size, save, road)
+                        pickle.dump((save, road), open('Tools/stat_save_road_car.txt', 'wb+'))
+                        return starter
                 for mark in marks:
                     if mark.button.rect.collidepoint(event.pos):
                         finish = mark.get_coords(1 / k_image_width, 1 / k_image_height)
                         finish = round(finish[0]), round(finish[1])
-                        if road is not None:
-                            road.money = int(texts['money'].value[0])
-                            if way[-1] == points[finish]:
-                                starter = Starter(choosing_car, screen, size, save, road)
-                                pickle.dump((save, road),
-                                            open('Tools/stat_save_road_car.txt', 'wb+'))
-                                return starter
                         road = Road(start_point, points[finish])
                         way = road.find_way(maps.conversion_graph)
                         distance = road.get_distance()
@@ -115,8 +131,7 @@ def map_display(screen, size: tuple[int, int], save: Save):
                         break
         screen.fill(pygame.Color((0, 0, 0)))
         map_sprites.draw(screen)
-        pygame.draw.circle(screen, (0, 0, 0), (X_CIRCLE, Y_CIRCLE),
-                           R_CIRCLE)
+        pygame.draw.circle(screen, (0, 0, 0), (X_CIRCLE, Y_CIRCLE), R_CIRCLE)
         if len(way) != 0:
             coords_last = (way[0].x * k_image_width, way[0].y * k_image_height)
             for i in range(1, len(way)):
@@ -125,10 +140,10 @@ def map_display(screen, size: tuple[int, int], save: Save):
                                  max(1, int(7 * k_image_width)))
                 coords_last = coords
         marks_sprites.draw(screen)
-        # for mark in marks:
-        #     mark.button.render_text(screen)
         for i in texts:
             texts[i].render(screen)
+        buttons_sprites.draw(screen)
+        button.render_text(screen)
         clock.tick(fps)
         pygame.display.flip()
     return None

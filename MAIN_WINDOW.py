@@ -228,8 +228,8 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
     right_pictur = car_obj.images[1].last_image.path
     rect_pictur = car_obj.mask.last_image.path
     max_speed = car_obj.specifications["max_speed"]
-    time_run = 3
-    limited_time = 1000
+    time_run = car_obj.specifications["boost"] # разгон
+    limited_time = road.time
     distance = road.distance
     winning_money = 10
     # screen, size: tuple[int, int], save: Save, road: Road, car: Car

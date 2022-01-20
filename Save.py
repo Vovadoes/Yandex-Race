@@ -5,12 +5,18 @@ import pickle
 from bson import json_util
 
 
+class Specifications:
+    def __init__(self, money=10):
+        self.money = money
+
+
 class Save:
     directory = './saves'
 
     def __init__(self, starter=None):
         self.starter = starter
         self.road_and_car = {}
+        self.specifications = Specifications()
         self.info = {'date': datetime.datetime.now(), 'name': 'None', 'max_level_car': 0}
 
     def save(self, name: str):
@@ -23,9 +29,13 @@ class Save:
         pickle.dump(self.road_and_car, open(os.path.join(full_way, "road_and_car.txt"), 'wb+'))
         json.dump(self.info, open(os.path.join(full_way, "info.json"), 'w+', encoding='UTF-8'),
                   default=json_util.default)
+        pickle.dump(self.specifications, open(os.path.join(full_way, "specifications.txt"), 'wb+'))
 
     def load(self, path):
-        pass
+        full_way = os.path.join(self.directory, path)
+        self.info = json.load(open(os.path.join(full_way, "info.json"), 'w+', encoding='UTF-8'))
+        self.road_and_car = pickle.load(open(os.path.join(full_way, "road_and_car.txt"), 'rb+'))
+        self.specifications = pickle.load(open(os.path.join(full_way, "specifications.txt"), 'rb+'))
 
     def set_last_save(self):
         lst = os.listdir(self.directory)

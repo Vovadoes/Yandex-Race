@@ -23,7 +23,7 @@ class Car:
     path_save = "Cars"
     info = {'name': 'None', 'path_basic_image': 'basic_image.png', 'path_images': 'images',
             'path_class_car': 'class_car.txt', 'path_mask': 'basic_image.png',
-            'path_info': 'info.json', "path_specifications": "specifications.txt"}
+            'path_info': 'info.json', "path_specifications": "specifications.json"}
     specifications = {"max_speed": 10, "boost": 10}
 
     def __init__(self, basic_image: Button = None, mask: Button = None, class_car: ClassCar = None):
@@ -42,8 +42,7 @@ class Car:
         self.class_car = pickle.load(
             open(os.path.join(full_path, self.info["path_class_car"]), 'rb'))
         self.mask = Button(Image(os.path.join(full_path, self.info["path_mask"])))
-        self.specifications = pickle.load(
-            open(os.path.join(full_path, self.info["path_specifications"]), 'rb'))
+        self.specifications = json.load(open(os.path.join(full_path, self.info["path_specifications"]), 'rb'))
         return self
 
     def save(self, name: str):
@@ -53,6 +52,6 @@ class Car:
                   default=json_util.default)
         pickle.dump(self.class_car,
                     open(os.path.join(self.path_save, name, self.info['path_class_car']), 'wb+'))
-        pickle.dump(self.specifications,
-                    open(os.path.join(self.path_save, name, self.info['path_specifications']),
-                         'wb+'))
+        json.dump(self.specifications,
+                  open(os.path.join(self.path_save, name, self.info["path_specifications"]), 'w+', encoding='UTF-8'),
+                  default=json_util.default)

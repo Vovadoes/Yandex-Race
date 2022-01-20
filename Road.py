@@ -81,6 +81,7 @@ class Road:
         self.way = None
         self.distance = None
         self.money = 0
+        self.time = 60
 
     def find_way(self, graph):
         visited = dijkstra(self.start, self.finish, graph)

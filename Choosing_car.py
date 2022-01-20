@@ -26,7 +26,7 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
     X_TEXT = int(0.02 * size[0])
     Y_BLOCK_BEGIN_TEXT = int(0.54 * size[1])
     Y_BLOCK_END_TEXT = int(0.97 * size[1])
-    X_BUTTON = int(0.75 * size[0])
+    X_BUTTON = int(0.65 * size[0])
     Y_BUTTON = int(0.9 * size[1])
 
     # создадим спрайт
@@ -80,10 +80,12 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
     del y_text
 
     # !!! Соотношение исправить !!! k !!!
-    button = Button(Image("data/Кнопка.png"), k_image_width / 2, k_image_height / 2, buttons_sprites)
+    button = Button(Image("data/Кнопка.png"), 1, 1)
+    k = size[1] * 0.08 / button.rect.height
+    button = Button(Image("data/Кнопка.png"), k, k, buttons_sprites)
     button.rect.x = X_BUTTON
     button.rect.y = Y_BUTTON
-    button.set_text("Новая игра")
+    button.set_text("Поехали)")
 
     fps = 30
     running = True
