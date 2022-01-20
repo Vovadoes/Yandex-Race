@@ -38,6 +38,10 @@ def menu(screen, size):
     buttons.append(button)
 
     button = Button(Image("data/Кнопка.png"), k_image_width, k_image_height, all_sprites)
+    save = Save()
+    save.save("first")
+    save.load("first")
+    button.starter = Starter(map_display, save=save, size=size, screen=screen)
     button.set_text("Продолжить")
     buttons.append(button)
 
