@@ -21,16 +21,17 @@ classes_car.append(ClassCar("Премиум", 2))
 
 class Car:
     path_save = "Cars"
+    info = {'name': 'None', 'path_basic_image': 'basic_image.png', 'path_images': 'images',
+            'path_class_car': 'class_car.txt', 'path_mask': 'basic_image.png',
+            'path_info': 'info.json', "path_specifications": "specifications.txt"}
+    specifications = {"max_speed": 10, "boost": 10}
 
     def __init__(self, basic_image: Button = None, mask: Button = None, class_car: ClassCar = None):
         self.basic_image = basic_image
         self.images: list[Button] = []
         self.class_car: ClassCar = class_car
         self.mask: Button = mask
-        self.specifications = {"max_speed": 10, "boost": 10}
-        self.info = {'name': 'None', 'path_basic_image': 'basic_image.png', 'path_images': 'images',
-                     'path_class_car': 'class_car.txt', 'path_mask': 'basic_image.png',
-                     'path_info': 'info.json', "path_specifications": "specifications.txt"}
+        # self.specifications = {"max_speed": 10, "boost": 10}
 
     def load(self, name):
         full_path = os.path.join(self.path_save, name)
