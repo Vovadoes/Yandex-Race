@@ -13,8 +13,8 @@ if __name__ == '__main__':
     size = width, height = 1028, 578
     screen = pygame.display.set_mode(size)
 
-    # starter = Starter(menu, screen, size)
-    starter = Starter(map_display, screen=screen, size=size, save=Save())
+    starter = Starter(menu, screen, size)
+    # starter = Starter(map_display, screen=screen, size=size, save=Save())
     # data = pickle.load(open('Tools/stat_save_road_car.txt', 'rb'))
     # starter = Starter(Choosing_car.choosing_car, screen, size, data[0], data[1])
 

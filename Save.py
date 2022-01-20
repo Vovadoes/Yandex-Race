@@ -31,9 +31,14 @@ class Save:
                   default=json_util.default)
         pickle.dump(self.specifications, open(os.path.join(full_way, "specifications.txt"), 'wb+'))
 
+        date = {'date': datetime.datetime.now()}
+        if not os.path.exists(os.path.join(self.directory, 'info.json')):
+            json.dump(self.info, open(os.path.join(self.directory, "info.json"), 'w+', encoding='UTF-8'),
+                      default=json_util.default)
+
     def load(self, path):
         full_way = os.path.join(self.directory, path)
-        self.info = json.load(open(os.path.join(full_way, "info.json"), 'w+', encoding='UTF-8'))
+        self.info = json.load(open(os.path.join(full_way, "info.json"), 'r', encoding='UTF-8'))
         self.road_and_car = pickle.load(open(os.path.join(full_way, "road_and_car.txt"), 'rb+'))
         self.specifications = pickle.load(open(os.path.join(full_way, "specifications.txt"), 'rb+'))
 
