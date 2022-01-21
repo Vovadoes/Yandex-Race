@@ -6,6 +6,8 @@ import time
 from Car import Car
 from Road import Road
 from Save import Save
+from Starter import Starter
+from Map_display import map_display
 
 
 def load_image(name, colorkey=None):  # открытие картинки
@@ -174,7 +176,7 @@ def whehe_should_put(qq):
         return 245 + 2 * 25
 
 
-def end_game(screen, distance, time_rr, money_k, winning_money):  # конец игры если прогиграл
+def end_game(screen, distance, time_rr, money_k, winning_money, save):  # конец игры если прогиграл
     time_rr = round(time_rr)
     picture = pygame.image.load("picturs/you_loss.png")
     screen.blit(picture, (571, 90))
@@ -197,13 +199,15 @@ def end_game(screen, distance, time_rr, money_k, winning_money):  # конец �
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:  # управление машинки
+                save.money += money_k
+                starter = Starter(map_display, screen, (1542, 799), save)
                 if event.key == pygame.K_SPACE:
-                    return money_k
+                    return starter
                 elif event.key == pygame.K_ESCAPE:
-                    return money_k
+                    return starter
 
 
-def win_game(screen, distance, time_rr, money_k, winning_money):  # конец игры если win
+def win_game(screen, distance, time_rr, money_k, winning_money, save):  # конец игры если win
     time_rr = round(time_rr)
     picture = pygame.image.load("picturs/you_won.png")
     screen.blit(picture, (571, 90))
@@ -226,10 +230,12 @@ def win_game(screen, distance, time_rr, money_k, winning_money):  # конец �
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:  # управление машинки
+                save.specifications.money += money_k + winning_money
+                starter = Starter(map_display, screen, (1542, 799), save)
                 if event.key == pygame.K_SPACE:
-                    return money_k + winning_money
+                    return starter
                 elif event.key == pygame.K_ESCAPE:
-                    return money_k + winning_money
+                    return starter
 
 
 def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Car):
@@ -246,10 +252,10 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
     # winning_money = 100  # деньги которые он выйграет
     indent_x = 571
     animation_set = [pygame.image.load(f"picturs\money\money_{i}.png") for i in range(0, 8)]
-    pygame.init()  # создаем окно
-    pygame.display.set_caption('Yandex_Race')
-    size = width, height = 400 + 571 * 2, 799
-    screen = pygame.display.set_mode(size)
+    # pygame.init()  # создаем окно
+    # pygame.display.set_caption('Yandex_Race')
+    # size = width, height = 400 + 571 * 2, 799
+    # screen = pygame.display.set_mode(size)
 
     running = True
     fps = 60  # пикселей в секунду
@@ -511,7 +517,7 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
                     else:
                         return win_game(screen, distance_save,
                                         time.time() - start_time - paus_time - 6, koll_money,
-                                        winning_money)
+                                        winning_money, save)
             else:
                 pygame.mixer.Sound.play(start_music)
                 car.rect.y -= 5
@@ -738,7 +744,7 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
             print(1234)
             return end_game(screen, distance_save - distance, time.time() - start_time - paus_time,
                             koll_money,
-                            winning_money)
+                            winning_money, save)
 
         # проверяем чтобы не было отступов
         # if sprite1.rect.y < sprite2.rect.y:  # sprite1 наверху
