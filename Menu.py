@@ -1,13 +1,14 @@
-import pygame
-
-from Button import Button
-from Save import Save
-from Starter import Starter
-from Map_display import map_display
-from Image import Image, load_image
-
-
 def menu(screen, size):
+    from pprint import pprint
+
+    import pygame
+
+    from Button import Button
+    from Save import Save
+    from Starter import Starter
+    from Map_display import map_display
+    from Image import Image, load_image
+
     # Константы для окна
     heading_percentages = 10
     heading_xp = size[1] // (100 / heading_percentages)
@@ -39,8 +40,8 @@ def menu(screen, size):
 
     button = Button(Image("data/Кнопка.png"), k_image_width, k_image_height, all_sprites)
     save = Save()
-    save.save("first")
-    save.load("first")
+    save.set_last_save()
+    pprint(Save.set_all_saves())  # print()
     button.starter = Starter(map_display, save=save, size=size, screen=screen)
     button.set_text("Продолжить")
     buttons.append(button)
@@ -80,7 +81,8 @@ def menu(screen, size):
             if event.type == pygame.MOUSEMOTION:
                 for button in buttons:
                     if button.rect.collidepoint(event.pos):
-                        button.change_picture(Image("data/Кнопка светлая.png"), k_image_width, k_image_height)
+                        button.change_picture(Image("data/Кнопка светлая.png"), k_image_width,
+                                              k_image_height)
                     else:
                         button.set_deafult()
             if event.type == pygame.MOUSEBUTTONDOWN:
