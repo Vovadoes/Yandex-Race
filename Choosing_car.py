@@ -1,17 +1,20 @@
-import os
-
-import pygame
-
-from Button import Button
 from Car import Car
-from Image import Image
-from Road import Road, Text
 from Save import Save
-from MAIN_WINDOW import main_game
-from Starter import Starter
+from Road import Road, Text
 
 
 def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
+    import os
+
+    import pygame
+
+    from Button import Button
+
+    from Image import Image
+
+    from MAIN_WINDOW import main_game
+    from Starter import Starter
+
     arrows_sprites = pygame.sprite.Group()
     background_sprites = pygame.sprite.Group()
     buttons_sprites = pygame.sprite.Group()
@@ -70,7 +73,7 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
     print(texts)
 
     d_y_text = (Y_BLOCK_END_TEXT - Y_BLOCK_BEGIN_TEXT - (len(texts) * TEXT_Height)) / (
-                len(texts) + 1)
+            len(texts) + 1)
     y_text = Y_BLOCK_BEGIN_TEXT + d_y_text
     for i in texts:
         texts[i].y = y_text

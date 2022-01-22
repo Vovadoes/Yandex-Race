@@ -1,6 +1,7 @@
 import os.path
 import datetime
 import json
+# import jsondatetime as json
 import pickle
 from bson import json_util
 
@@ -11,7 +12,7 @@ class Specifications:
 
 
 class Save:
-    directory = './saves'
+    directory = 'saves'
 
     def __init__(self, starter=None):
         self.starter = starter
@@ -19,8 +20,12 @@ class Save:
         self.specifications = Specifications()
         self.info = {'date': datetime.datetime.now(), 'name': 'None', 'max_level_car': 0}
 
-    def save(self, name: str):
-        self.info['name'] = name
+    def save(self, name: str = None):
+        if name is None:
+            name = datetime.datetime.utcnow().replace(
+                tzinfo=datetime.timezone.utc).isoformat().replace(':', '.')
+        if self.info['name'] == "None":
+            self.info['name'] = name
         if not os.path.exists(self.directory):
             os.makedirs(self.directory)
         full_way = os.path.join(self.directory, self.info['name'])
@@ -31,18 +36,51 @@ class Save:
                   default=json_util.default)
         pickle.dump(self.specifications, open(os.path.join(full_way, "specifications.txt"), 'wb+'))
 
-        date = {'date': datetime.datetime.now()}
+        dct = {'date': datetime.datetime.now(), 'name': self.info["name"]}
         if not os.path.exists(os.path.join(self.directory, 'info.json')):
-            json.dump(self.info, open(os.path.join(self.directory, "info.json"), 'w+', encoding='UTF-8'),
+            json.dump(dct, open(os.path.join(self.directory, "info.json"), 'w+', encoding='UTF-8'),
                       default=json_util.default)
+        else:
+            date_old = json.load(
+                open(os.path.join(self.directory, 'info.json'), 'r', encoding='UTF-8'),
+                object_hook=json_util.object_hook)
+            if dct['date'] > date_old["date"]:
+                json.dump(dct,
+                          open(os.path.join(self.directory, "info.json"), 'w+', encoding='UTF-8'),
+                          default=json_util.default)
 
     def load(self, path):
         full_way = os.path.join(self.directory, path)
-        self.info = json.load(open(os.path.join(full_way, "info.json"), 'r', encoding='UTF-8'))
+        self.info = json.load(open(os.path.join(full_way, "info.json"), 'r', encoding='UTF-8'),
+                              object_hook=json_util.object_hook)
         self.road_and_car = pickle.load(open(os.path.join(full_way, "road_and_car.txt"), 'rb+'))
         self.specifications = pickle.load(open(os.path.join(full_way, "specifications.txt"), 'rb+'))
 
     def set_last_save(self):
         lst = os.listdir(self.directory)
-        full_way = os.path.join(self.directory)
+        date = json.load(open(os.path.join(self.directory, 'info.json'), 'r', encoding='UTF-8'),
+                         object_hook=json_util.object_hook)
+        for name in lst:
+            full_way = os.path.join(self.directory, name)
+            if os.path.isdir(full_way):
+                info = json.load(
+                    open(os.path.join(full_way, "info.json"), 'r', encoding='UTF-8'),
+                    object_hook=json_util.object_hook)
+                if info["name"] == date["name"]:
+                    return self.load(info["name"])
+
         return None
+
+    @staticmethod
+    def set_all_saves():
+        saves = []
+        full_way = ''
+        lst = os.listdir(Save.directory)
+        for i in lst:
+            full_way = os.path.join(Save.directory, i)
+            if os.path.isdir(full_way):
+                info = json.load(open(os.path.join(full_way, "info.json"), 'r', encoding='UTF-8'),
+                                 object_hook=json_util.object_hook)
+                saves.append(info)
+        saves.sort(key=lambda x: x['date'])
+        return saves

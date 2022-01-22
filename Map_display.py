@@ -1,21 +1,20 @@
-import pickle
-
-import pygame
-
-from Button import Button
-from Mark import Mark, Locality
-from Save import Save
-from Car import classes_car
-from Image import Image
-from Road import Map, Road, Text
-from random import choice
-from Choosing_car import choosing_car
-import pickle
-
-from Starter import Starter
-
-
 def map_display(screen, size: tuple[int, int], save: Save):
+    from datetime import datetime, timezone
+
+    import pygame
+
+    from Button import Button
+    from Mark import Mark, Locality
+    from Save import Save
+    from Car import classes_car
+    from Image import Image
+    from Road import Map, Road, Text
+    from random import choice
+    from Choosing_car import choosing_car
+    import pickle
+
+    from Starter import Starter
+
     # создадим группу, содержащую все спрайты
     marks_sprites = pygame.sprite.Group()
     map_sprites = pygame.sprite.Group()
@@ -35,8 +34,10 @@ def map_display(screen, size: tuple[int, int], save: Save):
     Y_CIRCLE = 0
     TEXT_Height = int(60 * k_image_height)
     X_TEXT = int(size[0] - (size[0] - X_CIRCLE) - R_CIRCLE * 0.7)
-    X_BUTTON = int(0.72 * size[0])
-    Y_BUTTON = int(0.93 * size[1])
+    X_BUTTON_GO = int(0.72 * size[0])
+    Y_BUTTON_GO = int(0.93 * size[1])
+    X_BUTTON_EXIT = int(0.1 * size[0])
+    Y_BUTTON_EXIT = Y_BUTTON_GO
 
     maps.deafult_image.transform(size[0], size[1])
     maps.image = maps.deafult_image.image
@@ -75,13 +76,25 @@ def map_display(screen, size: tuple[int, int], save: Save):
 
     del y_text
 
-    # !!! Соотношение исправить !!! k !!!
+    buttons = []
+
     button = Button(Image("data/Кнопка.png"), 1, 1)
     k = size[1] * 0.06 / button.rect.height
     button = Button(Image("data/Кнопка.png"), k, k, buttons_sprites)
-    button.rect.x = X_BUTTON
-    button.rect.y = Y_BUTTON
+    button.rect.x = X_BUTTON_GO
+    button.rect.y = Y_BUTTON_GO
     button.set_text("К выбору машины")
+    buttons.append(button)
+
+    button_exit = Button(Image("data/Кнопка.png"), 1, 1)
+    k = size[1] * 0.06 / button_exit.rect.height
+    button_exit = Button(Image("data/Кнопка.png"), k, k, buttons_sprites)
+    button_exit.rect.x = X_BUTTON_EXIT
+    button_exit.rect.y = Y_BUTTON_EXIT
+    button_exit.set_text("Сохранить и выйти")
+    buttons.append(button_exit)
+
+    del k
 
     fps = 30
     running = True
@@ -102,12 +115,13 @@ def map_display(screen, size: tuple[int, int], save: Save):
                     else:
                         mark.button.set_deafult()
                         mark.centering()
-                if button.rect.collidepoint(event.pos):
-                    button.change_picture(Image("data/Кнопка светлая.png"),
-                                          button.deafult_k_image_width,
-                                          button.deafult_k_image_height)
-                else:
-                    button.set_deafult()
+                for button in buttons:
+                    if button.rect.collidepoint(event.pos):
+                        button.change_picture(Image("data/Кнопка светлая.png"),
+                                              button.deafult_k_image_width,
+                                              button.deafult_k_image_height)
+                    else:
+                        button.set_deafult()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button.rect.collidepoint(event.pos):
                     if road is not None:
@@ -115,6 +129,9 @@ def map_display(screen, size: tuple[int, int], save: Save):
                         starter = Starter(choosing_car, screen, size, save, road)
                         pickle.dump((save, road), open('Tools/stat_save_road_car.txt', 'wb+'))
                         return starter
+                if button.rect.collidepoint(event.pos):
+                    save.save()
+                    return None
                 for mark in marks:
                     if mark.button.rect.collidepoint(event.pos):
                         finish = mark.get_coords(1 / k_image_width, 1 / k_image_height)
@@ -143,7 +160,8 @@ def map_display(screen, size: tuple[int, int], save: Save):
         for i in texts:
             texts[i].render(screen)
         buttons_sprites.draw(screen)
-        button.render_text(screen)
+        for button in buttons:
+            button.render_text(screen)
         clock.tick(fps)
         pygame.display.flip()
     return None
