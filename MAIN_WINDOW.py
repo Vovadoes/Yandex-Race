@@ -199,7 +199,7 @@ def end_game(screen, distance, time_rr, money_k, winning_money, save):  # кон
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:  # управление машинки
-                save.money += money_k
+                save.specifications.money += money_k
                 starter = Starter(map_display, screen, (1542, 799), save)
                 if event.key == pygame.K_SPACE:
                     return starter
@@ -246,7 +246,7 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
     max_speed = car_obj.specifications["max_speed"]
     time_run = car_obj.specifications["boost"]  # разгон
     limited_time = road.time
-    distance = road.distance
+    distance = road.distance // road.specifications.PX_KM * 1000
     winning_money = 10
     # screen, size: tuple[int, int], save: Save, road: Road, car: Car
     # winning_money = 100  # деньги которые он выйграет

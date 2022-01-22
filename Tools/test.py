@@ -118,9 +118,11 @@ def find_way():
         print(f'---> {cur_node} ', end='')
 
 
-image_map = Image("Maps/map1/map.jpg")
+image_map = Image("data/Maps/map1/map.jpg")
 m = Map(image_map)
 m.set_graph(graph)
+m.specifications.PX_KM = 10
+m.specifications.MONEY_KM = 10
 m.save('map1')
 
 # a = [1,2,34,45]

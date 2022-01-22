@@ -1,5 +1,6 @@
 from Save import Save
 
+
 def map_display(screen, size: tuple[int, int], save: Save):
     import pygame
 
@@ -26,8 +27,6 @@ def map_display(screen, size: tuple[int, int], save: Save):
     # CONST
     k_image_width = size[0] / maps.image.get_width()
     k_image_height = size[1] / maps.image.get_height()
-    maps.PX_KM = 10  # Сколько пикселей в 1ом километре
-    maps.MONEY_KM = 10  # колиство монет за 1 км
     R_CIRCLE = 350 * k_image_height
     Y_TEXT_MAX = 350 * k_image_height * 0.8
     X_CIRCLE = size[0] - R_CIRCLE * 0.5
@@ -53,7 +52,6 @@ def map_display(screen, size: tuple[int, int], save: Save):
     way = []
     print(points)
 
-    global classes_car
     marks = []
     classes_car = classes_car[:save.info['max_level_car'] + 1:]
     for tupl in points:
@@ -78,13 +76,13 @@ def map_display(screen, size: tuple[int, int], save: Save):
 
     buttons = []
 
-    button = Button(Image("data/Кнопка.png"), 1, 1)
-    k = size[1] * 0.06 / button.rect.height
-    button = Button(Image("data/Кнопка.png"), k, k, buttons_sprites)
-    button.rect.x = X_BUTTON_GO
-    button.rect.y = Y_BUTTON_GO
-    button.set_text("К выбору машины")
-    buttons.append(button)
+    button_go = Button(Image("data/Кнопка.png"), 1, 1)
+    k = size[1] * 0.06 / button_go.rect.height
+    button_go = Button(Image("data/Кнопка.png"), k, k, buttons_sprites)
+    button_go.rect.x = X_BUTTON_GO
+    button_go.rect.y = Y_BUTTON_GO
+    button_go.set_text("К выбору машины")
+    buttons.append(button_go)
 
     button_exit = Button(Image("data/Кнопка.png"), 1, 1)
     k = size[1] * 0.06 / button_exit.rect.height
@@ -123,13 +121,14 @@ def map_display(screen, size: tuple[int, int], save: Save):
                     else:
                         button.set_deafult()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if button.rect.collidepoint(event.pos):
+                if button_go.rect.collidepoint(event.pos):
                     if road is not None:
                         road.money = int(texts['money'].value[0])
                         starter = Starter(choosing_car, screen, size, save, road)
+                        road.specifications = maps.specifications
                         pickle.dump((save, road), open('Tools/stat_save_road_car.txt', 'wb+'))
                         return starter
-                if button.rect.collidepoint(event.pos):
+                if button_exit.rect.collidepoint(event.pos):
                     save.save()
                     return None
                 for mark in marks:
@@ -139,9 +138,9 @@ def map_display(screen, size: tuple[int, int], save: Save):
                         road = Road(start_point, points[finish])
                         way = road.find_way(maps.conversion_graph)
                         distance = road.get_distance()
-                        texts['distance'].value = [str(int(distance / maps.PX_KM)), ' км']
+                        texts['distance'].value = [str(int(distance / maps.specifications.PX_KM)), ' км']
                         texts['money'].value = [
-                            str(int(int(texts['distance'].value[0]) * maps.MONEY_KM)),
+                            str(int(int(texts['distance'].value[0]) * maps.specifications.MONEY_KM)),
                             ' шт']
                         texts['class'].value = [mark.class_car.name]
                         print(way)
