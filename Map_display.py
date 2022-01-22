@@ -1,11 +1,11 @@
-def map_display(screen, size: tuple[int, int], save: Save):
-    from datetime import datetime, timezone
+from Save import Save
 
+def map_display(screen, size: tuple[int, int], save: Save):
     import pygame
 
     from Button import Button
     from Mark import Mark, Locality
-    from Save import Save
+
     from Car import classes_car
     from Image import Image
     from Road import Map, Road, Text
