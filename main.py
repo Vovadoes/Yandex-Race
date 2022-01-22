@@ -2,8 +2,8 @@ import pickle
 
 import pygame
 
-import Choosing_car
-from Menu import menu
+# import Choosing_car
+# from Menu import menu
 from Map_display import map_display
 from Save import Save
 from Starter import Starter
