@@ -9,6 +9,12 @@ from Dijkstra import dijkstra
 import pickle
 
 
+class Specifications:
+    def __init__(self, px_km=None, money_km=None):
+        self.PX_KM = px_km
+        self.MONEY_KM = money_km
+
+
 class Map(pygame.sprite.Sprite):
     save_path = r'./data/Maps/{}/{}'
 
@@ -24,8 +30,9 @@ class Map(pygame.sprite.Sprite):
         self.graph = None
         self.conversion_graph = None
         self.dct_points = None
-        self.PX_KM = None  # Сколько пикселей в 1ом километре
-        self.MONEY_KM = None  # колиство монет за 1 км
+        self.specifications = Specifications()
+        # self.PX_KM = None  # Сколько пикселей в 1ом километре
+        # self.MONEY_KM = None  # колиство монет за 1 км
 
     def set_graph(self, graph):
         self.graph = graph
@@ -39,8 +46,7 @@ class Map(pygame.sprite.Sprite):
         pickle.dump(self.dct_points, open(self.save_path.format(name, 'dct_points.txt'), 'wb+'))
         pickle.dump(self.conversion_graph,
                     open(self.save_path.format(name, 'conversion_graph.txt'), 'wb+'))
-        lst_const = [self.PX_KM, self.MONEY_KM]
-        pickle.dump(lst_const, open(self.save_path.format(name, 'info.txt'), 'wb+'))
+        pickle.dump(self.specifications, open(self.save_path.format(name, 'info.txt'), 'wb+'))
 
     def load(self, name=None):
         if name is None:
@@ -50,7 +56,7 @@ class Map(pygame.sprite.Sprite):
         self.dct_points = pickle.load(open(self.save_path.format(name, 'dct_points.txt'), 'rb'))
         self.conversion_graph = pickle.load(
             open(self.save_path.format(name, 'conversion_graph.txt'), 'rb'))
-        self.PX_KM, self.MONEY_KM = pickle.load(open(self.save_path.format(name, 'info.txt'), 'rb'))
+        self.specifications = pickle.load(open(self.save_path.format(name, 'info.txt'), 'rb'))
 
 
 class Text:
@@ -82,6 +88,7 @@ class Road:
         self.distance = None
         self.money = 0
         self.time = 60
+        self.specifications: Specifications = None
 
     def find_way(self, graph):
         visited = dijkstra(self.start, self.finish, graph)
