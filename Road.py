@@ -88,6 +88,7 @@ class Road:
         self.distance = None
         self.money = 0
         self.time = 60
+        self.complete_trip = False
         self.specifications: Specifications = None
 
     def find_way(self, graph):
