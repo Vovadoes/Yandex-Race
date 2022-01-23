@@ -139,6 +139,7 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
                 if button_GO.rect.collidepoint(event.pos):
                     if buy_car:
                         starter = Starter(main_game, screen, size, save, road, cars[index_car])
+                        save.save()
                         return starter
                     else:
                         if cars[index_car].specifications["Cost"] <= save.specifications.money:
