@@ -7,8 +7,9 @@ from bson import json_util
 
 
 class Specifications:
-    def __init__(self, money=10):
+    def __init__(self, money=10, *name_cars):
         self.money = money
+        self.name_cars = list(name_cars)
 
 
 class Save:
@@ -17,7 +18,7 @@ class Save:
     def __init__(self, starter=None):
         self.starter = starter
         self.road_and_car = {}
-        self.specifications = Specifications()
+        self.specifications = Specifications(10, 'baby taxi')
         self.info = {'date': datetime.datetime.now(), 'name': 'None', 'max_level_car': 0}
 
     def save(self, name: str = None):
