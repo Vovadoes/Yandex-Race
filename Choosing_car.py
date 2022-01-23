@@ -155,7 +155,7 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
                     else:
                         index_car = (index_car + 1) % len(cars)
                         # print("button_right")
-                        recalculate_car = True
+                    recalculate_car = True
         if recalculate_car:
             recalculate_car = False
             buy_car = cars[index_car].info["name"] in save.specifications.name_cars
