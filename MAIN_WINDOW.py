@@ -241,7 +241,7 @@ def win_game(screen, distance, time_rr, money_k, winning_money, save):  # кон
 def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Car):
     # def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limited_time, distance, winning_money):
     left_pictur = car_obj.images[0].last_image.path
-    right_pictur = car_obj.images[1].last_image.path
+    right_pictur = car_obj.images[-1].last_image.path
     rect_pictur = car_obj.mask.last_image.path
     max_speed = car_obj.specifications["max_speed"]
     time_run = car_obj.specifications["boost"]  # разгон

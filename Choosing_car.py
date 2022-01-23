@@ -1,23 +1,20 @@
+import pygame
+import os
 from Car import Car
 from Save import Save
 from Road import Road, Text
+from Button import Button
+from Image import Image
 
 
 def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
-    import os
-
-    import pygame
-
-    from Button import Button
-
-    from Image import Image
-
     from MAIN_WINDOW import main_game
     from Starter import Starter
 
     arrows_sprites = pygame.sprite.Group()
     background_sprites = pygame.sprite.Group()
     buttons_sprites = pygame.sprite.Group()
+    clok_sprites = pygame.sprite.Group()
 
     background = Image('data/Фон выбора машины.png')
 
@@ -41,13 +38,15 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
 
     cars = []
     for i in os.listdir(os.path.join(Car.path_save)):
-        car = Car().load(name=i)
+        car = Car().load(path=i)
+        k = min(size[1] * 0.8 / car.basic_image.rect.height, size[0] * 0.8 / car.basic_image.rect.width)
         car.basic_image = Button(car.basic_image.deafult_image,
-                                 size[1] * 0.8 / car.basic_image.rect.height,
-                                 size[1] * 0.8 / car.basic_image.rect.height)
+                                 k,
+                                 k)
         car.basic_image.rect.x = (size[0] - car.basic_image.rect.width) // 2
         car.basic_image.rect.y = (size[1] - car.basic_image.rect.height) // 2
         cars.append(car)
+
     index_car = 0
 
     button_left = Button(Image(r"data/Стрелка влево.png"), 1, 1, x=0)
@@ -82,13 +81,20 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
     del d_y_text
     del y_text
 
-    # !!! Соотношение исправить !!! k !!!
     button = Button(Image("data/Кнопка.png"), 1, 1)
     k = size[1] * 0.08 / button.rect.height
     button = Button(Image("data/Кнопка.png"), k, k, buttons_sprites)
     button.rect.x = X_BUTTON
     button.rect.y = Y_BUTTON
     button.set_text("Поехали)")
+
+    lock_button = Button(Image("data/lock.png"), 1, 1)
+    k = size[1] * 0.08 / lock_button.rect.height
+    lock_button = Button(Image("data/lock.png"), k, k, clok_sprites)
+    lock_button.rect.x = X_BUTTON
+    lock_button.rect.y = Y_BUTTON
+    lock_button.set_text("Поехали)")
+
 
     fps = 30
     running = True
@@ -109,12 +115,13 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
                 if button.rect.collidepoint(event.pos):
                     starter = Starter(main_game, screen, size, save, road, cars[index_car])
                     return starter
-                if button_left.rect.collidepoint(event.pos):
-                    index_car = (index_car - 1) % len(cars)
-                    print("button_left")
-                if button_right.rect.collidepoint(event.pos):
-                    index_car = (index_car + 1) % len(cars)
-                    print("button_right")
+                if button_left.rect.collidepoint(event.pos) or button_right.rect.collidepoint(event.pos):
+                    if button_left.rect.collidepoint(event.pos):
+                        index_car = (index_car - 1) % len(cars)
+                        print("button_left")
+                    else:
+                        index_car = (index_car + 1) % len(cars)
+                        print("button_right")
         screen.fill(pygame.Color((0, 0, 0)))
         background_sprites.draw(screen)
         screen.blit(cars[index_car].basic_image.image, cars[index_car].basic_image.rect)
@@ -123,6 +130,8 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
             texts[i].render(screen)
         buttons_sprites.draw(screen)
         button.render_text(screen)
+        clok_sprites.draw(screen)
+        print(cars[index_car].info["name"], save.specifications.name_cars)
         clock.tick(fps)
         pygame.display.flip()
     return None
