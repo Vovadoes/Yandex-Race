@@ -35,12 +35,13 @@ def map_display(screen, size: tuple[int, int], save: Save):
     X_TEXT = int(size[0] - (size[0] - X_CIRCLE) - R_CIRCLE * 0.7)
     X_BUTTON_GO = int(0.72 * size[0])
     Y_BUTTON_GO = int(0.93 * size[1])
-    X_BUTTON_EXIT = int(0.1 * size[0])
+    X_BUTTON_EXIT = int(0.02 * size[0])
     Y_BUTTON_EXIT = Y_BUTTON_GO
 
     maps.deafult_image.transform(size[0], size[1])
     maps.image = maps.deafult_image.image
     maps.load('map1')
+    print(maps.specifications.PX_KM)
 
     if len(save.road_and_car) == 0:
         start_point = maps.start
@@ -138,6 +139,7 @@ def map_display(screen, size: tuple[int, int], save: Save):
                         road = Road(start_point, points[finish])
                         way = road.find_way(maps.conversion_graph)
                         distance = road.get_distance()
+                        print(maps.specifications.PX_KM)
                         texts['distance'].value = [str(int(distance / maps.specifications.PX_KM)), ' км']
                         texts['money'].value = [
                             str(int(int(texts['distance'].value[0]) * maps.specifications.MONEY_KM)),

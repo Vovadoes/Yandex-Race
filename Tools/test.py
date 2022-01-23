@@ -121,7 +121,7 @@ def find_way():
 image_map = Image("data/Maps/map1/map.jpg")
 m = Map(image_map)
 m.set_graph(graph)
-m.specifications.PX_KM = 10
+m.specifications.PX_KM = 100
 m.specifications.MONEY_KM = 10
 m.save('map1')
 
