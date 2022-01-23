@@ -39,10 +39,9 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
     cars = []
     for i in os.listdir(os.path.join(Car.path_save)):
         car = Car().load(path=i)
-        k = min(size[1] * 0.8 / car.basic_image.rect.height, size[0] * 0.8 / car.basic_image.rect.width)
-        car.basic_image = Button(car.basic_image.deafult_image,
-                                 k,
-                                 k)
+        k = min(size[1] * 0.8 / car.basic_image.rect.height,
+                size[0] * 0.8 / car.basic_image.rect.width)
+        car.basic_image = Button(car.basic_image.deafult_image, k, k)
         car.basic_image.rect.x = (size[0] - car.basic_image.rect.width) // 2
         car.basic_image.rect.y = (size[1] - car.basic_image.rect.height) // 2
         cars.append(car)
@@ -95,7 +94,6 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
     lock_button.rect.y = Y_BUTTON
     lock_button.set_text("Поехали)")
 
-
     fps = 30
     running = True
     clock = pygame.time.Clock()
@@ -115,7 +113,8 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
                 if button.rect.collidepoint(event.pos):
                     starter = Starter(main_game, screen, size, save, road, cars[index_car])
                     return starter
-                if button_left.rect.collidepoint(event.pos) or button_right.rect.collidepoint(event.pos):
+                if button_left.rect.collidepoint(event.pos) or button_right.rect.collidepoint(
+                        event.pos):
                     if button_left.rect.collidepoint(event.pos):
                         index_car = (index_car - 1) % len(cars)
                         print("button_left")
