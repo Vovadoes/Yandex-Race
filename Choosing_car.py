@@ -24,7 +24,7 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
     k_image_standart = min(k_image_width, k_image_height)
     TEXT_Height = int(4 * k_image_standart)
     X_TEXT_BEGIN = int(0.02 * size[0])
-    X_TEXT_END = int(0.4 * size[0])
+    X_TEXT_END = int(0.38 * size[0])
     Y_BLOCK_BEGIN_TEXT = int(0.64 * size[1])
     Y_BLOCK_END_TEXT = int(0.97 * size[1])
     X_BUTTON = int(0.65 * size[0])
@@ -170,7 +170,7 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
         background_sprites.draw(screen)
         screen.blit(cars[index_car].basic_image.image, cars[index_car].basic_image.rect)
 
-        pygame.draw.rect(screen, (0, 0, 0), (
+        pygame.draw.rect(screen, (145, 81, 0), (
         X_TEXT_BEGIN, Y_BLOCK_BEGIN_TEXT, X_TEXT_END - X_TEXT_BEGIN,
         Y_BLOCK_END_TEXT - Y_BLOCK_BEGIN_TEXT))
 
