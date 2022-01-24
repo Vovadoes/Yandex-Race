@@ -14,6 +14,12 @@ class ClassCar:
         self.name = name
         self.k_money = k_money
 
+    def __hash__(self):
+        return hash(self.name)
+
+    def __eq__(self, other):
+        return hash(self) == hash(other)
+
 
 classes_car = []
 classes_car.append(ClassCar("Первый"))
@@ -85,3 +91,12 @@ class Car:
                   open(os.path.join(full_path, self.info["path_specifications"]), 'w+',
                        encoding='UTF-8'),
                   default=json_util.default)
+
+    @staticmethod
+    def get_class_car(path):
+        full_path = os.path.join(Car.path_save, path)
+        info = json.load(open(os.path.join(full_path, Car.info['path_info']), 'rb'))
+        class_car = pickle.load(
+            open(os.path.join(full_path, info["path_class_car"]), 'rb'))
+        return class_car
+

@@ -1,3 +1,7 @@
+import os
+from pprint import pprint
+
+from Car import Car
 from Save import Save
 
 
@@ -37,29 +41,29 @@ def map_display(screen, size: tuple[int, int], save: Save):
     Y_BUTTON_GO = int(0.93 * size[1])
     X_BUTTON_EXIT = int(0.02 * size[0])
     Y_BUTTON_EXIT = Y_BUTTON_GO
+    COUNT_MARK = 5
 
     maps.deafult_image.transform(size[0], size[1])
     maps.image = maps.deafult_image.image
     maps.load('map1')
-    print(maps.specifications.PX_KM)
 
     if len(save.road_and_car) == 0:
         start_point = maps.start
     else:
-        start_point = save.road_and_car[-1].finish
+        start_point = [i for i in save.road_and_car][-1].finish
 
     points = maps.dct_points
 
     way = []
-    print(points)
+    # print(points)
 
     marks = []
-    classes_car = classes_car[:save.info['max_level_car'] + 1:]
+    class_cars = [Car.get_class_car(path=i) for i in save.specifications.name_cars]
     for tupl in points:
         if type(points[tupl]) is Locality:
             mark = Mark(
                 button=Button(Image("data/Метка.png"), k_image_width, k_image_height, marks_sprites),
-                class_car=choice(classes_car))
+                class_car=choice(class_cars))
             mark.centering(points[tupl].get_coords(k_image_width, k_image_height))
             marks.append(mark)
 
@@ -127,6 +131,7 @@ def map_display(screen, size: tuple[int, int], save: Save):
                         road.money = int(texts['money'].value[0])
                         starter = Starter(choosing_car, screen, size, save, road)
                         road.specifications = maps.specifications
+                        road.money = int(texts['money'].value[0])
                         pickle.dump((save, road), open('Tools/stat_save_road_car.txt', 'wb+'))
                         return starter
                 if button_exit.rect.collidepoint(event.pos):
@@ -139,13 +144,12 @@ def map_display(screen, size: tuple[int, int], save: Save):
                         road = Road(start_point, points[finish])
                         way = road.find_way(maps.conversion_graph)
                         distance = road.get_distance()
-                        print(maps.specifications.PX_KM)
-                        texts['distance'].value = [str(int(distance / maps.specifications.PX_KM)), ' км']
+                        texts['distance'].value = [str(round(distance / maps.specifications.PX_KM, 1)), ' км']
                         texts['money'].value = [
-                            str(int(int(texts['distance'].value[0]) * maps.specifications.MONEY_KM)),
+                            str(round(float(texts['distance'].value[0]) * maps.specifications.MONEY_KM)),
                             ' шт']
                         texts['class'].value = [mark.class_car.name]
-                        print(way)
+                        pprint(way)
                         break
         screen.fill(pygame.Color((0, 0, 0)))
         map_sprites.draw(screen)

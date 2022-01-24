@@ -199,12 +199,10 @@ def end_game(screen, distance, time_rr, money_k, winning_money, save):  # кон
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:  # управление машинки
-                save.specifications.money += money_k
-                starter = Starter(map_display, screen, (1542, 799), save)
                 if event.key == pygame.K_SPACE:
-                    return starter
+                    return money_k
                 elif event.key == pygame.K_ESCAPE:
-                    return starter
+                    return money_k
 
 
 def win_game(screen, distance, time_rr, money_k, winning_money, save):  # конец игры если win
@@ -230,16 +228,11 @@ def win_game(screen, distance, time_rr, money_k, winning_money, save):  # кон
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:  # управление машинки
-                save.specifications.money += money_k + winning_money
-                starter = Starter(map_display, screen, (1542, 799), save)
-                if event.key == pygame.K_SPACE:
-                    return starter
-                elif event.key == pygame.K_ESCAPE:
-                    return starter
+                if event.key in (pygame.K_SPACE, pygame.K_ESCAPE):
+                    return money_k + winning_money
 
 
 def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Car):
-    # def main_game(left_pictur, right_pictur, rect_pictur, max_speed, time_run, limited_time, distance, winning_money):
     left_pictur = car_obj.images[0].last_image.path
     right_pictur = car_obj.images[-1].last_image.path
     rect_pictur = car_obj.mask.last_image.path
@@ -247,7 +240,7 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
     time_run = car_obj.specifications["boost"]  # разгон
     limited_time = road.time
     distance = road.distance // road.specifications.PX_KM * 1000
-    winning_money = 10
+    winning_money = round(road.money * car_obj.class_car.k_money)
     # screen, size: tuple[int, int], save: Save, road: Road, car: Car
     # winning_money = 100  # деньги которые он выйграет
     indent_x = 571
@@ -763,5 +756,21 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
         pygame.display.flip()
     pygame.quit()
 
+
 # left_pictur, right_pictur, rect_pictur, max_speed, time_run, limited_time, distance, winning_money
 # print(main_game("real_car.png", 'real_car2.png', 'mask.png', 7, 1, 60, 2000, 50))
+
+def start_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Car):
+    screen_new = pygame.display.set_mode((1542, 799))
+    money = main_game(screen_new, (1542, 799), save, road, car_obj)
+    # money = 10
+    save.specifications.money += money
+    road.complete_trip = True
+    car_obj.images = []
+    car_obj.mask = None
+    car_obj.basic_image = None
+    save.road_and_car[road] = car_obj
+    print(save.road_and_car)
+    save.save()
+    starter = Starter(map_display, screen, size, save)
+    return starter

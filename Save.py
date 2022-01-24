@@ -5,21 +5,29 @@ import json
 import pickle
 from bson import json_util
 
+from Car import Car
+
 
 class Specifications:
-    def __init__(self, money=10, *name_cars):
+    def __init__(self, money=10, name_cars=None):
+        if name_cars is None:
+            name_cars = []
         self.money = money
-        self.name_cars = list(name_cars)
+        self.name_cars = name_cars
 
 
 class Save:
     directory = 'saves'
 
-    def __init__(self, starter=None):
+    def __init__(self, car_def: Car = Car().load('baby taxi'), starter=None):
         self.starter = starter
         self.road_and_car = {}
-        self.specifications = Specifications(10, 'baby taxi')
-        self.info = {'date': datetime.datetime.now(), 'name': 'None', 'max_level_car': 0}
+        self.specifications = Specifications(10, [car_def.info["name"]])
+        self.info = {'date': datetime.datetime.now(), 'name': 'None'}
+        self.add_car(car_def)
+
+    def add_car(self, car: Car):
+        self.specifications.name_cars.append(car.info['name'])
 
     def save(self, name: str = None):
         if name is None:
