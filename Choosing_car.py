@@ -77,18 +77,21 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
             texts[i] = Text(f"{dct_text[i]}: ", height=TEXT_Height, x=X_TEXT_BEGIN)
             texts[i].value = [Car.specifications[i]]
 
+    texts['class_car'] = Text(f"Класс машины: ", height=TEXT_Height, x=X_TEXT_BEGIN)
+    texts['class_car'].value = [cars[index_car].class_car.name]
+
     texts['money'] = Text(f"Получите за поездку: ", height=TEXT_Height, x=X_TEXT_BEGIN)
     texts['money'].value = [round(road.money * cars[index_car].class_car.k_money), ' m']
 
     texts['you_counts'] = Text(f"Ваши монеты: ", height=TEXT_Height, x=X_TEXT_BEGIN)
     texts['you_counts'].value = [save.specifications.money]
 
-    dct_message = {'ok': "OK", 'no_money': 'У вас мало денег'}
+    dct_message = {'ok': "OK", 'no_money': 'У вас мало денег', 'class_car': '{} не соответсвует {}'}
 
     texts['message'] = Text(f"Сообщение: ", height=TEXT_Height, x=X_TEXT_BEGIN)
     texts['message'].value = [dct_message['ok']]
 
-    print(texts)
+    # print(texts)
 
     d_y_text = (Y_BLOCK_END_TEXT - Y_BLOCK_BEGIN_TEXT - (len(texts) * TEXT_Height)) / (
             len(texts) + 1)
@@ -141,9 +144,14 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_GO.rect.collidepoint(event.pos):
                     if buy_car:
-                        starter = Starter(start_game, screen, size, save, road, cars[index_car])
-                        save.save()
-                        return starter
+                        if cars[index_car].class_car.level < road.finish.class_car.level:
+                            texts['message'].value = [
+                                dct_message['class_car'].format(cars[index_car].class_car.name,
+                                                                road.finish.class_car.name)]
+                        else:
+                            starter = Starter(start_game, screen, size, save, road, cars[index_car])
+                            save.save()
+                            return starter
                     else:
                         if cars[index_car].specifications["Cost"] <= save.specifications.money:
                             save.specifications.money -= cars[index_car].specifications["Cost"]
@@ -164,6 +172,7 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
             buy_car = cars[index_car].info["name"] in save.specifications.name_cars
             texts['message'].value = [dct_message['ok']]
             texts['money'].value = [round(road.money * cars[index_car].class_car.k_money), ' m']
+            texts['class_car'].value = [cars[index_car].class_car.name]
             if buy_car:
                 button_GO.set_text(button_GO_dct[buy_car])
             else:
@@ -175,8 +184,8 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
         screen.blit(cars[index_car].basic_image.image, cars[index_car].basic_image.rect)
 
         pygame.draw.rect(screen, (145, 81, 0), (
-        X_TEXT_BEGIN, Y_BLOCK_BEGIN_TEXT, X_TEXT_END - X_TEXT_BEGIN,
-        Y_BLOCK_END_TEXT - Y_BLOCK_BEGIN_TEXT))
+            X_TEXT_BEGIN, Y_BLOCK_BEGIN_TEXT, X_TEXT_END - X_TEXT_BEGIN,
+            Y_BLOCK_END_TEXT - Y_BLOCK_BEGIN_TEXT))
 
         arrows_sprites.draw(screen)
         for i in texts:

@@ -19,7 +19,7 @@ class Specifications:
 class Save:
     directory = 'saves'
 
-    def __init__(self, car_def: Car = Car().load('baby taxi'), starter=None):
+    def __init__(self, car_def: Car = Car().load('first_car_r'), starter=None):
         self.starter = starter
         self.road_and_car = {}
         self.specifications = Specifications(10, [car_def.info["name"]])

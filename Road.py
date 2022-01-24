@@ -3,7 +3,7 @@ import math
 import pygame
 
 from Image import Image
-from Mark import Locality
+from Mark import Locality, Mark
 from functions import mark_conversion
 from Dijkstra import dijkstra
 import pickle
@@ -81,7 +81,7 @@ def distance(coords, coords_last):
 
 
 class Road:
-    def __init__(self, start, finish):
+    def __init__(self, start: Mark, finish: Mark):
         self.start = start
         self.finish = finish
         self.way = None
