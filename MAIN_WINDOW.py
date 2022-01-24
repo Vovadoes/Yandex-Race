@@ -762,8 +762,8 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
 
 def start_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Car):
     screen_new = pygame.display.set_mode((1542, 799))
-    money = main_game(screen_new, (1542, 799), save, road, car_obj)
-    # money = 10
+    # money = main_game(screen_new, (1542, 799), save, road, car_obj)
+    money = 10
     save.specifications.money += money
     road.complete_trip = True
     car_obj.images = []

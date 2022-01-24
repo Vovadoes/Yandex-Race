@@ -7,14 +7,21 @@ from Image import Image
 
 # print(os.listdir(r'Cars\car1\images'))
 
-car = Car(class_car=classes_car[0])
-car.basic_image = Button(Image(r'E:\GitHub\picturs for vova\picturs for vova\baby_taxi-r.png'))
-car.mask = Button(Image(r'E:\GitHub\picturs for vova\picturs for vova\m_baby (1).png'))
-car.images = [Button(Image(r'E:\GitHub\picturs for vova\picturs for vova\m_baby.png'))]
-car.save('baby taxi')
+print(classes_car)
+
+a = list(filter(lambda x: x.name == 'Первый', classes_car))
+print(a[-1])
+
+name = 'first_car_r'
+
+car = Car(class_car=a[-1])
+car.basic_image = Button(Image(r'E:\GitHub\picturs for vova\picturs for vova\first_car_r.png'))
+car.mask = Button(Image(r'E:\GitHub\picturs for vova\picturs for vova\m_econom_2 (1).png'))
+car.images = [Button(Image(r'E:\GitHub\picturs for vova\picturs for vova\m_econom_2.png'))]
+car.save(name)
 
 print('save.. success')
 
-car.load('baby taxi')
+car.load(name)
 
 print('load.. success')
