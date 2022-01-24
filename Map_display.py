@@ -1,17 +1,17 @@
-import os
 from pprint import pprint
+from random import sample
 
 from Car import Car
+from Road import Road
 from Save import Save
 
 
-def map_display(screen, size: tuple[int, int], save: Save):
+def map_display(screen, size: tuple[int, int], save: Save, road: Road = None):
     import pygame
 
     from Button import Button
     from Mark import Mark, Locality
 
-    from Car import classes_car
     from Image import Image
     from Road import Map, Road, Text
     from random import choice
@@ -19,6 +19,11 @@ def map_display(screen, size: tuple[int, int], save: Save):
     import pickle
 
     from Starter import Starter
+
+    if road is not None:
+        way = road.way
+    else:
+        way = []
 
     # создадим группу, содержащую все спрайты
     marks_sprites = pygame.sprite.Group()
@@ -54,17 +59,17 @@ def map_display(screen, size: tuple[int, int], save: Save):
 
     points = maps.dct_points
 
-    way = []
     # print(points)
 
     marks = []
     class_cars = [Car.get_class_car(path=i) for i in save.specifications.name_cars]
-    for tupl in points:
-        if type(points[tupl]) is Locality:
+    tupls = [i for i in points if type(points[i]) is Locality and start_point != points[i]]
+    lst = sample(tupls, COUNT_MARK)
+    for i in range(COUNT_MARK):
             mark = Mark(
                 button=Button(Image("data/Метка.png"), k_image_width, k_image_height, marks_sprites),
                 class_car=choice(class_cars))
-            mark.centering(points[tupl].get_coords(k_image_width, k_image_height))
+            mark.centering(points[lst[i]].get_coords(k_image_width, k_image_height))
             marks.append(mark)
 
     texts = dict()
@@ -102,8 +107,6 @@ def map_display(screen, size: tuple[int, int], save: Save):
     fps = 30
     running = True
     clock = pygame.time.Clock()
-
-    road = None
 
     while running:
         for event in pygame.event.get():
@@ -144,11 +147,14 @@ def map_display(screen, size: tuple[int, int], save: Save):
                         road = Road(start_point, points[finish])
                         way = road.find_way(maps.conversion_graph)
                         distance = road.get_distance()
-                        texts['distance'].value = [str(round(distance / maps.specifications.PX_KM, 1)), ' км']
+                        texts['distance'].value = [
+                            str(round(distance / maps.specifications.PX_KM, 1)), ' км']
                         texts['money'].value = [
-                            str(round(float(texts['distance'].value[0]) * maps.specifications.MONEY_KM)),
+                            str(round(
+                                float(texts['distance'].value[0]) * maps.specifications.MONEY_KM)),
                             ' шт']
                         texts['class'].value = [mark.class_car.name]
+                        road.finish.class_car = mark.class_car
                         pprint(way)
                         break
         screen.fill(pygame.Color((0, 0, 0)))

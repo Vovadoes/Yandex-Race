@@ -10,9 +10,10 @@ from bson import json_util
 
 
 class ClassCar:
-    def __init__(self, name, k_money=1.0):
+    def __init__(self, name, k_money=1.0, level=0):
         self.name = name
         self.k_money = k_money
+        self.level = level
 
     def __hash__(self):
         return hash(self.name)
@@ -21,9 +22,9 @@ class ClassCar:
         return hash(self) == hash(other)
 
 
-classes_car = [ClassCar("Первый"), ClassCar("Эконом", 1.2), ClassCar("Детский", 1.5),
-               ClassCar("Бизнес", 2.1), ClassCar("Комфорт", 1.5), ClassCar("Премиум", 3),
-               ClassCar("Быстрый", 2)]
+classes_car = [ClassCar("Первый", 1.0, 0), ClassCar("Эконом", 1.2, 1), ClassCar("Детский", 1.5, 2),
+               ClassCar("Бизнес", 2.1, 4), ClassCar("Комфорт", 1.5, 3), ClassCar("Премиум", 3, 5),
+               ClassCar("Быстрый", 2, 6)]
 
 
 class Car:
@@ -56,8 +57,6 @@ class Car:
 
     def save(self, name: str):
         self.info['name'] = name
-
-
 
         full_path = os.path.join(self.path_save, name, self.info["path_images"])
 
@@ -99,4 +98,3 @@ class Car:
         class_car = pickle.load(
             open(os.path.join(full_path, info["path_class_car"]), 'rb'))
         return class_car
-
