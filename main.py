@@ -1,14 +1,15 @@
 import pickle
-
-import pygame
-
-import Choosing_car
-from Menu import menu
-from Map_display import map_display
 from Save import Save
+import pygame
 from Starter import Starter
 
+
 if __name__ == '__main__':
+    import Choosing_car
+    from Menu import menu
+    from Map_display import map_display
+
+
     pygame.init()
     size = width, height = 1542, 799
     screen = pygame.display.set_mode(size)

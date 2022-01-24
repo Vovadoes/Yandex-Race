@@ -78,7 +78,19 @@ graph = {
     Locality(568, 304): [Locality(602, 304)],
     Locality(602, 304): [Crossroad(602, 353)],
     Locality(330, 398): [Crossroad(366, 398)],
-    Crossroad(366, 398): [Locality(366, 440)]
+    Crossroad(366, 398): [Locality(366, 448)],
+    Locality(366, 448): [Crossroad(557, 448)],
+    Crossroad(557, 448): [Locality(557, 646)],
+    Locality(557, 646): [Crossroad(499, 646)],
+    Crossroad(499, 646): [Crossroad(499, 663)],
+    Crossroad(499, 663): [Crossroad(397, 663)],
+    Crossroad(397, 663): [Locality(212, 663)],
+    Locality(212, 663): [Crossroad(169, 663)],
+    Crossroad(169, 663): [Crossroad(169, 678)],
+    Crossroad(169, 678): [Locality(127, 678)],
+    Locality(127, 678): [Crossroad(127, 441)],
+    Crossroad(127, 441): [Crossroad(162, 441)],
+    Crossroad(162, 441): [Locality(161, 284)]
 }
 
 
@@ -121,8 +133,8 @@ def find_way():
 image_map = Image("data/Maps/map1/map.jpg")
 m = Map(image_map)
 m.set_graph(graph)
-m.specifications.PX_KM = 10
-m.specifications.MONEY_KM = 10
+m.specifications.PX_KM = 1000
+m.specifications.MONEY_KM = 100
 m.save('map1')
 
 # a = [1,2,34,45]

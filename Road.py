@@ -3,7 +3,7 @@ import math
 import pygame
 
 from Image import Image
-from Mark import Locality
+from Mark import Locality, Mark
 from functions import mark_conversion
 from Dijkstra import dijkstra
 import pickle
@@ -81,13 +81,14 @@ def distance(coords, coords_last):
 
 
 class Road:
-    def __init__(self, start, finish):
+    def __init__(self, start: Mark, finish: Mark):
         self.start = start
         self.finish = finish
         self.way = None
         self.distance = None
         self.money = 0
         self.time = 60
+        self.complete_trip = False
         self.specifications: Specifications = None
 
     def find_way(self, graph):
@@ -111,4 +112,10 @@ class Road:
                 coords = self.way[i].get_coords()
                 self.distance += distance(coords, coords_last)
                 coords_last = coords
+
         return self.distance
+
+    def set_time(self, distance):
+        self.time = round(distance * 90)
+        return self.time
+

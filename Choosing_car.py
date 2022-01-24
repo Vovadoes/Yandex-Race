@@ -1,23 +1,23 @@
+import pygame
+import os
+
+
 from Car import Car
 from Save import Save
 from Road import Road, Text
+from Button import Button
+from Image import Image
 
 
 def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
-    import os
-
-    import pygame
-
-    from Button import Button
-
-    from Image import Image
-
-    from MAIN_WINDOW import main_game
+    from MAIN_WINDOW import start_game
     from Starter import Starter
+    from Map_display import map_display
 
     arrows_sprites = pygame.sprite.Group()
     background_sprites = pygame.sprite.Group()
     buttons_sprites = pygame.sprite.Group()
+    clok_sprites = pygame.sprite.Group()
 
     background = Image('data/Фон выбора машины.png')
 
@@ -25,12 +25,17 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
     k_image_width = size[0] / background.image.get_width()
     k_image_height = size[1] / background.image.get_height()
     k_image_standart = min(k_image_width, k_image_height)
-    TEXT_Height = int(6 * k_image_standart)
-    X_TEXT = int(0.02 * size[0])
-    Y_BLOCK_BEGIN_TEXT = int(0.54 * size[1])
+    TEXT_Height = int(4 * k_image_standart)
+    X_TEXT_BEGIN = int(0.02 * size[0])
+    X_TEXT_END = int(0.38 * size[0])
+    Y_BLOCK_BEGIN_TEXT = int(0.64 * size[1])
     Y_BLOCK_END_TEXT = int(0.97 * size[1])
-    X_BUTTON = int(0.65 * size[0])
+    X_BUTTON = int(0.7 * size[0])
     Y_BUTTON = int(0.9 * size[1])
+    X_LOCK_BUTTON = int(0.4 * size[0])
+    Y_LOCK_BUTTON = int(0.3 * size[1])
+    X_BUTTON_EXIT = int(0.4 * size[0])
+    Y_BUTTON_EXIT = Y_BUTTON
 
     # создадим спрайт
     background_sprite = pygame.sprite.Sprite(background_sprites)
@@ -41,13 +46,16 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
 
     cars = []
     for i in os.listdir(os.path.join(Car.path_save)):
-        car = Car().load(name=i)
-        car.basic_image = Button(car.basic_image.deafult_image,
-                                 size[1] * 0.8 / car.basic_image.rect.height,
-                                 size[1] * 0.8 / car.basic_image.rect.height)
+        car = Car().load(path=i)
+        k = min(size[1] * 0.8 / car.basic_image.rect.height,
+                size[0] * 0.8 / car.basic_image.rect.width)
+        car.basic_image = Button(car.basic_image.deafult_image, k, k)
         car.basic_image.rect.x = (size[0] - car.basic_image.rect.width) // 2
         car.basic_image.rect.y = (size[1] - car.basic_image.rect.height) // 2
         cars.append(car)
+
+    # cars.reverse()
+
     index_car = 0
 
     button_left = Button(Image(r"data/Стрелка влево.png"), 1, 1, x=0)
@@ -63,14 +71,43 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
     button_left.rect.y = (size[1] - button_left.rect.height) // 2
     button_left.rect.x = 10
 
+    buttons = []
+
+    button_exit = Button(Image("data/Кнопка.png"), 1, 1)
+    k = size[1] * 0.07 / button_exit.rect.height
+    button_exit = Button(Image("data/Кнопка.png"), k, k, buttons_sprites)
+    button_exit.rect.x = X_BUTTON_EXIT
+    button_exit.rect.y = Y_BUTTON_EXIT
+    button_exit.set_text("Назад")
+    buttons.append(button_exit)
+
+
     del k
 
     texts = dict()
-    for i in Car.specifications:
-        texts[i] = Text(f"{i}: ", height=TEXT_Height, x=X_TEXT)
-        texts[i].value = [Car.specifications[i]]
 
-    print(texts)
+    dct_text = {'max_speed': 'Максимальная скорость', 'boost': 'Ускорение'}
+
+    for i in Car.specifications:
+        if i in dct_text:
+            texts[i] = Text(f"{dct_text[i]}: ", height=TEXT_Height, x=X_TEXT_BEGIN)
+            texts[i].value = [Car.specifications[i]]
+
+    texts['class_car'] = Text(f"Класс машины: ", height=TEXT_Height, x=X_TEXT_BEGIN)
+    texts['class_car'].value = [cars[index_car].class_car.name]
+
+    texts['money'] = Text(f"Получите за поездку: ", height=TEXT_Height, x=X_TEXT_BEGIN)
+    texts['money'].value = [round(road.money * cars[index_car].class_car.k_money), ' m']
+
+    texts['you_counts'] = Text(f"Ваши монеты: ", height=TEXT_Height, x=X_TEXT_BEGIN)
+    texts['you_counts'].value = [save.specifications.money]
+
+    dct_message = {'ok': "OK", 'no_money': 'У вас мало денег', 'class_car': '{} не соответсвует {}'}
+
+    texts['message'] = Text(f"Сообщение: ", height=TEXT_Height, x=X_TEXT_BEGIN)
+    texts['message'].value = [dct_message['ok']]
+
+    # print(texts)
 
     d_y_text = (Y_BLOCK_END_TEXT - Y_BLOCK_BEGIN_TEXT - (len(texts) * TEXT_Height)) / (
             len(texts) + 1)
@@ -82,13 +119,30 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
     del d_y_text
     del y_text
 
-    # !!! Соотношение исправить !!! k !!!
-    button = Button(Image("data/Кнопка.png"), 1, 1)
-    k = size[1] * 0.08 / button.rect.height
-    button = Button(Image("data/Кнопка.png"), k, k, buttons_sprites)
-    button.rect.x = X_BUTTON
-    button.rect.y = Y_BUTTON
-    button.set_text("Поехали)")
+    lock_button = Button(Image("data/lock.png"), 1, 1)
+    k = min(size[1] * 0.5 / lock_button.rect.height,
+            size[0] * 0.5 / lock_button.rect.width)
+    lock_button = Button(Image("data/lock.png"), k, k, clok_sprites)
+    lock_button.rect.x = X_LOCK_BUTTON
+    lock_button.rect.y = Y_LOCK_BUTTON
+    lock_button.set_text("Поехали)")
+
+    buy_car = cars[index_car].info["name"] in save.specifications.name_cars
+
+    button_GO_dct = {True: "Поехали)", False: "Купить за {} монет."}
+    button_GO = Button(Image("data/Кнопка.png"), 1, 1)
+    k = size[1] * 0.07 / button_GO.rect.height
+    button_GO = Button(Image("data/Кнопка.png"), k, k, buttons_sprites)
+    button_GO.rect.x = X_BUTTON
+    button_GO.rect.y = Y_BUTTON
+    buttons.append(button_GO)
+
+    if buy_car:
+        button_GO.set_text(button_GO_dct[buy_car])
+    else:
+        button_GO.set_text(button_GO_dct[buy_car].format(cars[index_car].specifications["Cost"]))
+
+    recalculate_car = True
 
     fps = 30
     running = True
@@ -99,30 +153,70 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEMOTION:
-                if button.rect.collidepoint(event.pos):
-                    button.change_picture(Image("data/Кнопка светлая.png"),
-                                          button.deafult_k_image_width,
-                                          button.deafult_k_image_height)
-                else:
-                    button.set_deafult()
+                for button in buttons:
+                    if button.rect.collidepoint(event.pos):
+                        button.change_picture(Image("data/Кнопка светлая.png"),
+                                                 button.deafult_k_image_width,
+                                                 button.deafult_k_image_height)
+                    else:
+                        button.set_deafult()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if button.rect.collidepoint(event.pos):
-                    starter = Starter(main_game, screen, size, save, road, cars[index_car])
+                if button_exit.rect.collidepoint(event.pos):
+                    starter = Starter(map_display, screen, size, save, road)
                     return starter
-                if button_left.rect.collidepoint(event.pos):
-                    index_car = (index_car - 1) % len(cars)
-                    print("button_left")
-                if button_right.rect.collidepoint(event.pos):
-                    index_car = (index_car + 1) % len(cars)
-                    print("button_right")
+                if button_GO.rect.collidepoint(event.pos):
+                    if buy_car:
+                        if cars[index_car].class_car.level < road.finish.class_car.level:
+                            texts['message'].value = [
+                                dct_message['class_car'].format(cars[index_car].class_car.name,
+                                                                road.finish.class_car.name)]
+                        else:
+                            starter = Starter(start_game, screen, size, save, road, cars[index_car])
+                            save.save()
+                            return starter
+                    else:
+                        if cars[index_car].specifications["Cost"] <= save.specifications.money:
+                            save.specifications.money -= cars[index_car].specifications["Cost"]
+                            texts['you_counts'].value = [save.specifications.money]
+                            save.specifications.name_cars.append(cars[index_car].info['name'])
+                            recalculate_car = True
+                if button_left.rect.collidepoint(event.pos) or button_right.rect.collidepoint(
+                        event.pos):
+                    if button_left.rect.collidepoint(event.pos):
+                        index_car = (index_car - 1) % len(cars)
+                        # print("button_left")
+                    else:
+                        index_car = (index_car + 1) % len(cars)
+                        # print("button_right")
+                    recalculate_car = True
+        if recalculate_car:
+            recalculate_car = False
+            buy_car = cars[index_car].info["name"] in save.specifications.name_cars
+            texts['message'].value = [dct_message['ok']]
+            texts['money'].value = [round(road.money * cars[index_car].class_car.k_money), ' m']
+            texts['class_car'].value = [cars[index_car].class_car.name]
+            if buy_car:
+                button_GO.set_text(button_GO_dct[buy_car])
+            else:
+                button_GO.set_text(
+                    button_GO_dct[buy_car].format(cars[index_car].specifications["Cost"]))
+        # Вывод
         screen.fill(pygame.Color((0, 0, 0)))
         background_sprites.draw(screen)
         screen.blit(cars[index_car].basic_image.image, cars[index_car].basic_image.rect)
+
+        pygame.draw.rect(screen, (145, 81, 0), (
+            X_TEXT_BEGIN, Y_BLOCK_BEGIN_TEXT, X_TEXT_END - X_TEXT_BEGIN,
+            Y_BLOCK_END_TEXT - Y_BLOCK_BEGIN_TEXT))
+
         arrows_sprites.draw(screen)
         for i in texts:
             texts[i].render(screen)
         buttons_sprites.draw(screen)
-        button.render_text(screen)
+        button_GO.render_text(screen)
+        button_exit.render_text(screen)
+        if not buy_car:
+            clok_sprites.draw(screen)
         clock.tick(fps)
         pygame.display.flip()
     return None
