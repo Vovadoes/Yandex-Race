@@ -21,14 +21,9 @@ class ClassCar:
         return hash(self) == hash(other)
 
 
-classes_car = []
-classes_car.append(ClassCar("Первый"))
-classes_car.append(ClassCar("Эконом", 1.2))
-classes_car.append(ClassCar("Детский", 1.5))
-classes_car.append(ClassCar("Бизнес", 2.1))
-classes_car.append(ClassCar("Комфорт", 1.5))
-classes_car.append(ClassCar("Премиум", 3))
-classes_car.append(ClassCar("Быстрый", 2))
+classes_car = [ClassCar("Первый"), ClassCar("Эконом", 1.2), ClassCar("Детский", 1.5),
+               ClassCar("Бизнес", 2.1), ClassCar("Комфорт", 1.5), ClassCar("Премиум", 3),
+               ClassCar("Быстрый", 2)]
 
 
 class Car:
@@ -62,7 +57,12 @@ class Car:
     def save(self, name: str):
         self.info['name'] = name
 
+
+
         full_path = os.path.join(self.path_save, name, self.info["path_images"])
+
+        if not os.path.exists(full_path):
+            os.makedirs(full_path)
         for i in self.images:
             image = Image_pil.open(i.last_image.path)
             file_name = os.path.basename(i.last_image.path)
