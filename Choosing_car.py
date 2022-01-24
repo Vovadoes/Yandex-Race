@@ -8,7 +8,7 @@ from Image import Image
 
 
 def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
-    from MAIN_WINDOW import main_game
+    from MAIN_WINDOW import start_game
     from Starter import Starter
 
     arrows_sprites = pygame.sprite.Group()
@@ -49,7 +49,7 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
         car.basic_image.rect.y = (size[1] - car.basic_image.rect.height) // 2
         cars.append(car)
 
-    cars.reverse()
+    # cars.reverse()
 
     index_car = 0
 
@@ -77,7 +77,10 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
             texts[i] = Text(f"{dct_text[i]}: ", height=TEXT_Height, x=X_TEXT_BEGIN)
             texts[i].value = [Car.specifications[i]]
 
-    texts['you_counts'] = Text(f"Количество монет: ", height=TEXT_Height, x=X_TEXT_BEGIN)
+    texts['money'] = Text(f"Получите за поездку: ", height=TEXT_Height, x=X_TEXT_BEGIN)
+    texts['money'].value = [round(road.money * cars[index_car].class_car.k_money), ' m']
+
+    texts['you_counts'] = Text(f"Ваши монеты: ", height=TEXT_Height, x=X_TEXT_BEGIN)
     texts['you_counts'].value = [save.specifications.money]
 
     dct_message = {'ok': "OK", 'no_money': 'У вас мало денег'}
@@ -138,7 +141,7 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_GO.rect.collidepoint(event.pos):
                     if buy_car:
-                        starter = Starter(main_game, screen, size, save, road, cars[index_car])
+                        starter = Starter(start_game, screen, size, save, road, cars[index_car])
                         save.save()
                         return starter
                     else:
@@ -160,6 +163,7 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
             recalculate_car = False
             buy_car = cars[index_car].info["name"] in save.specifications.name_cars
             texts['message'].value = [dct_message['ok']]
+            texts['money'].value = [round(road.money * cars[index_car].class_car.k_money), ' m']
             if buy_car:
                 button_GO.set_text(button_GO_dct[buy_car])
             else:
