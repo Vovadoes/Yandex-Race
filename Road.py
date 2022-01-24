@@ -112,4 +112,10 @@ class Road:
                 coords = self.way[i].get_coords()
                 self.distance += distance(coords, coords_last)
                 coords_last = coords
+
         return self.distance
+
+    def set_time(self, distance):
+        self.time = round(distance * 90)
+        return self.time
+

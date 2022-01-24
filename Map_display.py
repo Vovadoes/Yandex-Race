@@ -2,6 +2,7 @@ from pprint import pprint
 from random import sample
 
 from Car import Car
+from Menu import menu
 from Road import Road
 from Save import Save
 
@@ -139,7 +140,8 @@ def map_display(screen, size: tuple[int, int], save: Save, road: Road = None):
                         return starter
                 if button_exit.rect.collidepoint(event.pos):
                     save.save()
-                    return None
+                    starter = Starter(menu, screen, size)
+                    return starter
                 for mark in marks:
                     if mark.button.rect.collidepoint(event.pos):
                         finish = mark.get_coords(1 / k_image_width, 1 / k_image_height)
@@ -148,7 +150,7 @@ def map_display(screen, size: tuple[int, int], save: Save, road: Road = None):
                         way = road.find_way(maps.conversion_graph)
                         distance = road.get_distance()
                         texts['distance'].value = [
-                            str(round(distance / maps.specifications.PX_KM, 1)), ' км']
+                            str(round(distance / maps.specifications.PX_KM, 2)), ' км']
                         texts['money'].value = [
                             str(round(
                                 float(texts['distance'].value[0]) * maps.specifications.MONEY_KM)),

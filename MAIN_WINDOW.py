@@ -238,8 +238,8 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
     rect_pictur = car_obj.mask.last_image.path
     max_speed = car_obj.specifications["max_speed"]
     time_run = car_obj.specifications["boost"]  # разгон
-    limited_time = road.time
-    distance = road.distance // road.specifications.PX_KM * 1000
+    limited_time = road.set_time(road.distance / road.specifications.PX_KM)
+    distance = (road.distance * 1000) // road.specifications.PX_KM
     winning_money = round(road.money * car_obj.class_car.k_money)
     # screen, size: tuple[int, int], save: Save, road: Road, car: Car
     # winning_money = 100  # деньги которые он выйграет
@@ -510,7 +510,7 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
                     else:
                         return win_game(screen, distance_save,
                                         time.time() - start_time - paus_time - 6, koll_money,
-                                        winning_money, save)
+                                        winning_money, save), True
             else:
                 pygame.mixer.Sound.play(start_music)
                 car.rect.y -= 5
@@ -737,7 +737,7 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
             print(1234)
             return end_game(screen, distance_save - distance, time.time() - start_time - paus_time,
                             koll_money,
-                            winning_money, save)
+                            winning_money, save), False
 
         # проверяем чтобы не было отступов
         # if sprite1.rect.y < sprite2.rect.y:  # sprite1 наверху
@@ -762,9 +762,9 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
 
 def start_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Car):
     screen_new = pygame.display.set_mode((1542, 799))
-    # money = main_game(screen_new, (1542, 799), save, road, car_obj)
-    money = 10
-    save.specifications.money += money
+    money, finished = main_game(screen_new, (1542, 799), save, road, car_obj)
+    if finished:
+        save.specifications.money += money
     road.complete_trip = True
     car_obj.images = []
     car_obj.mask = None

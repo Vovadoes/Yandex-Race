@@ -1,3 +1,6 @@
+from Control import control
+
+
 def menu(screen, size):
     from pprint import pprint
 
@@ -51,7 +54,8 @@ def menu(screen, size):
     buttons.append(button)
 
     button = Button(Image("data/Кнопка.png"), k_image_width, k_image_height, all_sprites)
-    button.set_text("Настройки")
+    button.set_text("Управление")
+    button.starter = Starter(control, size=size, screen=screen)
     buttons.append(button)
 
     button = Button(Image("data/Кнопка.png"), k_image_width, k_image_height, all_sprites)
