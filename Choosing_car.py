@@ -170,7 +170,7 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
                                                                 road.finish.class_car.name)]
                         else:
                             starter = Starter(start_game, screen, size, save, road, cars[index_car])
-                            save.save()
+                            # save.save()
                             return starter
                     else:
                         if cars[index_car].specifications["Cost"] <= save.specifications.money:

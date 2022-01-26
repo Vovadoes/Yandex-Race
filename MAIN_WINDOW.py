@@ -771,7 +771,10 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
 
 def start_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Car):
     screen_new = pygame.display.set_mode((1542, 799))
-    money, finished = main_game(screen_new, (1542, 799), save, road, car_obj)
+    tup = main_game(screen_new, (1542, 799), save, road, car_obj)
+    if tup is None:
+        return None
+    money, finished = tup
     # money, finished = 10, False
     if finished:
         save.specifications.money += money

@@ -34,4 +34,4 @@ if __name__ == '__main__':
             pass
         starter = starter.start()
         starter: Starter
-    pygame.mixer.music.pause()
+    # pygame.mixer.music.pause()
