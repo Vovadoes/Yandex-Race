@@ -1,4 +1,6 @@
 import pickle
+
+from MAIN_WINDOW import start_game
 from Save import Save
 import pygame
 from Starter import Starter
@@ -10,9 +12,13 @@ if __name__ == '__main__':
     from Map_display import map_display
 
 
+
     pygame.init()
     size = width, height = 1542, 799
     screen = pygame.display.set_mode(size)
+    pygame.mixer.music.load("data/c329a3c28705add.mp3")
+    pygame.mixer.music.play(-1)
+
 
     starter = Starter(menu, screen, size)
     # starter = Starter(map_display, screen=screen, size=size, save=Save())
@@ -20,7 +26,12 @@ if __name__ == '__main__':
     # starter = Starter(Choosing_car.choosing_car, screen, size, data[0], data[1])
 
     while True:
-        starter = starter.start()
         if starter is None:
             break
+        if starter.fn is start_game:
+            pygame.mixer.music.pause()
+        else:
+            pygame.mixer.music.unpause()
+        starter = starter.start()
         starter: Starter
+    pygame.mixer.music.pause()
