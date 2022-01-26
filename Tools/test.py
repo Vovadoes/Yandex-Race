@@ -84,13 +84,23 @@ graph = {
     Locality(557, 646): [Crossroad(499, 646)],
     Crossroad(499, 646): [Crossroad(499, 663)],
     Crossroad(499, 663): [Crossroad(397, 663)],
-    Crossroad(397, 663): [Locality(212, 663)],
+    Crossroad(397, 663): [Locality(212, 663), Crossroad(397, 812)],
     Locality(212, 663): [Crossroad(169, 663)],
     Crossroad(169, 663): [Crossroad(169, 678)],
     Crossroad(169, 678): [Locality(127, 678)],
     Locality(127, 678): [Crossroad(127, 441)],
     Crossroad(127, 441): [Crossroad(162, 441)],
-    Crossroad(162, 441): [Locality(161, 284)]
+    Crossroad(162, 441): [Locality(161, 284)],
+    Crossroad(397, 812): [Locality(335, 852)],
+    Locality(335, 852): [Crossroad(355, 882)],
+    Crossroad(355, 882): [Crossroad(355, 882)],
+    Crossroad(355, 882): [Crossroad(355, 962)],
+    Crossroad(355, 962): [Crossroad(488, 962)],
+    Crossroad(488, 962): [Locality(488, 1074)],
+    Locality(488, 1074): [Locality(525, 1074)],
+    Locality(525, 1074): [Crossroad(770, 1074)],
+    Crossroad(770, 1074): [Crossroad(770, 974)],
+    Crossroad(770, 974): [Locality(791, 974)]
 }
 
 

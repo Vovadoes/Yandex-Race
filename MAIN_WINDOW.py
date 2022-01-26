@@ -775,7 +775,7 @@ def start_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: C
     money, finished = 10, False
     if finished:
         save.specifications.money += money
-    road.complete_trip = True
+    road.complete_trip = finished
     car_obj.images = []
     car_obj.mask = None
     car_obj.basic_image = None

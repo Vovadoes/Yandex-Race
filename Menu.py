@@ -45,10 +45,9 @@ def menu(screen, size):
     button = Button(Image("data/Кнопка.png"), k_image_width, k_image_height, all_sprites)
     save = Save()
     res = save.set_last_save()
-    if res is None:
-        save = Save()
-    pprint(Save.set_all_saves())  # print()
-    button.starter = Starter(map_display, save=save, size=size, screen=screen)
+    if res is not None:
+        pprint(Save.set_all_saves())  # print()
+        button.starter = Starter(map_display, save=save, size=size, screen=screen)
     button.set_text("Продолжить")
     buttons.append(button)
 

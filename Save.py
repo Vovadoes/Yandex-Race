@@ -24,7 +24,7 @@ class Save:
         self.road_and_car = {}
         self.specifications = Specifications(10, [car_def.info["name"]])
         self.info = {'date': datetime.datetime.now(), 'name': 'None'}
-        self.add_car(car_def)
+        # self.add_car(car_def)
         if not os.path.exists(self.directory):
             os.makedirs(self.directory)
 
@@ -82,6 +82,19 @@ class Save:
                     object_hook=json_util.object_hook)
                 if info["name"] == date["name"]:
                     return self.load(os.path.join(path))
+        return None
+
+    @staticmethod
+    def get_path(name):
+        lst = os.listdir(Save.directory)
+        for path in lst:
+            full_way = os.path.join(Save.directory, path)
+            if os.path.isdir(full_way):
+                info = json.load(
+                    open(os.path.join(full_way, "info.json"), 'r', encoding='UTF-8'),
+                    object_hook=json_util.object_hook)
+                if info["name"] == name:
+                    return path
         return None
 
     @staticmethod
