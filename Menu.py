@@ -1,16 +1,16 @@
 from Control import control
+from pprint import pprint
+from Image import Image, load_image
+import pygame
+
+from Button import Button
+from Save import Save
+from Starter import Starter
 
 
 def menu(screen, size):
-    from pprint import pprint
-
-    import pygame
-
-    from Button import Button
-    from Save import Save
-    from Starter import Starter
     from Map_display import map_display
-    from Image import Image, load_image
+    from Saves_display import saves_dislpay
 
     # Константы для окна
     heading_percentages = 10
@@ -54,6 +54,7 @@ def menu(screen, size):
 
     button = Button(Image("data/Кнопка.png"), k_image_width, k_image_height, all_sprites)
     button.set_text("Сохранения")
+    button.starter = Starter(saves_dislpay, size=size, screen=screen)
     buttons.append(button)
 
     button = Button(Image("data/Кнопка.png"), k_image_width, k_image_height, all_sprites)

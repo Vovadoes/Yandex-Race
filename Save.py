@@ -25,6 +25,8 @@ class Save:
         self.specifications = Specifications(10, [car_def.info["name"]])
         self.info = {'date': datetime.datetime.now(), 'name': 'None'}
         self.add_car(car_def)
+        if not os.path.exists(self.directory):
+            os.makedirs(self.directory)
 
     def add_car(self, car: Car):
         self.specifications.name_cars.append(car.info['name'])

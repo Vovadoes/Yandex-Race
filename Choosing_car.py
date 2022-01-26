@@ -1,7 +1,6 @@
 import pygame
 import os
 
-
 from Car import Car
 from Save import Save
 from Road import Road, Text
@@ -33,7 +32,7 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
     X_BUTTON = int(0.7 * size[0])
     Y_BUTTON = int(0.9 * size[1])
     X_LOCK_BUTTON = int(0.4 * size[0])
-    Y_LOCK_BUTTON = int(0.3 * size[1])
+    Y_LOCK_BUTTON = int(0.1 * size[1])
     X_BUTTON_EXIT = int(0.4 * size[0])
     Y_BUTTON_EXIT = Y_BUTTON
 
@@ -51,7 +50,7 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
                 size[0] * 0.8 / car.basic_image.rect.width)
         car.basic_image = Button(car.basic_image.deafult_image, k, k)
         car.basic_image.rect.x = (size[0] - car.basic_image.rect.width) // 2
-        car.basic_image.rect.y = (size[1] - car.basic_image.rect.height) // 2
+        car.basic_image.rect.y = (size[1] * 0.7 - car.basic_image.rect.height) // 2
         cars.append(car)
 
     # cars.reverse()
@@ -80,7 +79,6 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
     button_exit.rect.y = Y_BUTTON_EXIT
     button_exit.set_text("Назад")
     buttons.append(button_exit)
-
 
     del k
 
@@ -156,8 +154,8 @@ def choosing_car(screen, size: tuple[int, int], save: Save, road: Road):
                 for button in buttons:
                     if button.rect.collidepoint(event.pos):
                         button.change_picture(Image("data/Кнопка светлая.png"),
-                                                 button.deafult_k_image_width,
-                                                 button.deafult_k_image_height)
+                                              button.deafult_k_image_width,
+                                              button.deafult_k_image_height)
                     else:
                         button.set_deafult()
             if event.type == pygame.MOUSEBUTTONDOWN:

@@ -30,6 +30,7 @@ def map_display(screen, size: tuple[int, int], save: Save, road: Road = None):
     marks_sprites = pygame.sprite.Group()
     map_sprites = pygame.sprite.Group()
     buttons_sprites = pygame.sprite.Group()
+    boss_sprites = pygame.sprite.Group()
 
     image_map = Image(Map.save_path.format('map1', 'map.jpg'))
     maps = Map(image_map, map_sprites)
@@ -47,6 +48,7 @@ def map_display(screen, size: tuple[int, int], save: Save, road: Road = None):
     Y_BUTTON_GO = int(0.93 * size[1])
     X_BUTTON_EXIT = int(0.02 * size[0])
     Y_BUTTON_EXIT = Y_BUTTON_GO
+    SIZE_YOU_MARK = int(0.02 * size[0])
     COUNT_MARK = 5
 
     maps.deafult_image.transform(size[0], size[1])
@@ -72,6 +74,13 @@ def map_display(screen, size: tuple[int, int], save: Save, road: Road = None):
                 class_car=choice(class_cars))
             mark.centering(points[lst[i]].get_coords(k_image_width, k_image_height))
             marks.append(mark)
+
+    you_mark = Button(Image("data/You_mark.png"), 1, 1)
+    k = SIZE_YOU_MARK / you_mark.rect.height
+    you_mark = Button(Image("data/You_mark.png"), k, k, boss_sprites)
+    you_mark.rect.x = start_point.x * k_image_width - you_mark.rect.width // 2
+    you_mark.rect.y = start_point.y * k_image_height - you_mark.rect.height // 2
+
 
     texts = dict()
     texts['distance'] = Text("Дистанция: ", height=TEXT_Height, x=X_TEXT)
@@ -170,6 +179,7 @@ def map_display(screen, size: tuple[int, int], save: Save, road: Road = None):
                                  max(1, int(7 * k_image_width)))
                 coords_last = coords
         marks_sprites.draw(screen)
+        boss_sprites.draw(screen)
         for i in texts:
             texts[i].render(screen)
         buttons_sprites.draw(screen)
