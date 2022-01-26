@@ -133,8 +133,8 @@ def find_way():
 image_map = Image("data/Maps/map1/map.jpg")
 m = Map(image_map)
 m.set_graph(graph)
-m.specifications.PX_KM = 1000
-m.specifications.MONEY_KM = 100
+m.specifications.PX_KM = 200
+m.specifications.MONEY_KM = 20
 m.save('map1')
 
 # a = [1,2,34,45]
