@@ -51,10 +51,10 @@ def saves_dislpay(screen, size):
     button_exit.starter = Starter(menu, screen, size)
     buttons.append(button_exit)
 
-    table = Button(Image("data/xxx.png"), 1, 1)
+    table = Button(Image("data/table.png"), 1, 1)
     k = min(size[1] / table.rect.height,
             size[0] / table.rect.width)
-    table = Button(Image("data/xxx.png"), k, k, background_sprites)
+    table = Button(Image("data/table.png"), k, k, background_sprites)
     table.rect.x = (size[0] - table.rect.width) // 2
     table.rect.y = (size[1] - table.rect.height) // 2
 
