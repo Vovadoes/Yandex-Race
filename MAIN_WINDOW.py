@@ -72,7 +72,8 @@ png_files = {'break_car_taxi_2.png': load_image("break_car_taxi_2.png"),
              'money_5.png': load_image(f"money\money_5.png"),
              'money_6.png': load_image(f"money\money_6.png"),
              'money_7.png': load_image(f"money\money_7.png"),
-             'nothing.png': load_image(f"nothing.png")}
+             'nothing.png': load_image(f"nothing.png"),
+             'fon.jpg': load_image(f"fon.jpg")}
 
 
 def show_up_info(up_info, screen, health=0, time_s=0, distance=0):
@@ -193,7 +194,7 @@ def end_game(screen, distance, time_rr, money_k, winning_money, save):  # кон
     screen.blit(text, [600, 280])
     text = font.render(f"MONEY YOU LOSS = {winning_money}", True, (255, 204, 0))
     screen.blit(text, [600, 320])
-    text = font.render("НАЖМИТЕ ENTER", True, (255, 0, 51))
+    text = font.render("НАЖМИТЕ SPACE", True, (255, 0, 51))
     screen.blit(text, [650, 370])
     pygame.display.flip()
     while True:
@@ -222,7 +223,7 @@ def win_game(screen, distance, time_rr, money_k, winning_money, save):  # кон
     screen.blit(text, [600, 280])
     text = font.render(f"ALL MONEY = {money_k + winning_money}", True, (255, 204, 0))
     screen.blit(text, [600, 320])
-    text = font.render("НАЖМИТЕ ENTER", True, (255, 0, 51))
+    text = font.render("НАЖМИТЕ SPACE", True, (255, 0, 51))
     screen.blit(text, [650, 370])
     pygame.display.flip()
     while True:
@@ -253,7 +254,14 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
     running = True
     fps = 60  # пикселей в секунду
     clock = pygame.time.Clock()
-
+    # фон левый и правый
+    fon = pygame.sprite.Group()
+    fon_left = pygame.sprite.Sprite()
+    fon_left.image = png_files["fon.jpg"]
+    fon_left.rect = fon_left.image.get_rect()
+    fon.add(fon_left)
+    fon_left.rect.x = 0
+    fon_left.rect.y = 0
     # главная информация
     up_info = pygame.sprite.Group()
     sprite_up = pygame.sprite.Sprite()
@@ -520,6 +528,7 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
                     z = 100
             screen.fill((0, 0, 0))
             # показ почти всего
+            fon.draw(screen)  # left right fon
             all_sprites.draw(screen)
             side_road_left.draw(screen)
             side_road_right.draw(screen)
