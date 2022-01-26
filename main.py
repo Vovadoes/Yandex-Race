@@ -16,8 +16,8 @@ if __name__ == '__main__':
     pygame.init()
     size = width, height = 1542, 799
     screen = pygame.display.set_mode(size)
-    s = pygame.mixer.Sound("data/c329a3c28705add.mp3")
-    s.play(-1)
+    pygame.mixer.music.load("data/c329a3c28705add.mp3")
+    pygame.mixer.music.play(-1)
 
 
     starter = Starter(menu, screen, size)
@@ -26,12 +26,12 @@ if __name__ == '__main__':
     # starter = Starter(Choosing_car.choosing_car, screen, size, data[0], data[1])
 
     while True:
-        starter = starter.start()
         if starter is None:
             break
         if starter.fn is start_game:
-            s.stop()
+            pygame.mixer.music.pause()
         else:
-            s.play(-1)
+            pygame.mixer.music.unpause()
+        starter = starter.start()
         starter: Starter
-    s.stop()
+    pygame.mixer.music.pause()
