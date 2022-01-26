@@ -64,26 +64,28 @@ class Save:
                               object_hook=json_util.object_hook)
         self.road_and_car = pickle.load(open(os.path.join(full_way, "road_and_car.txt"), 'rb+'))
         self.specifications = pickle.load(open(os.path.join(full_way, "specifications.txt"), 'rb+'))
+        return self
 
     def set_last_save(self):
         lst = os.listdir(self.directory)
+        if not os.path.exists(os.path.join(self.directory, 'info.json')):
+            return None
         date = json.load(open(os.path.join(self.directory, 'info.json'), 'r', encoding='UTF-8'),
                          object_hook=json_util.object_hook)
-        for name in lst:
-            full_way = os.path.join(self.directory, name)
+        for path in lst:
+            full_way = os.path.join(self.directory, path)
             if os.path.isdir(full_way):
                 info = json.load(
                     open(os.path.join(full_way, "info.json"), 'r', encoding='UTF-8'),
                     object_hook=json_util.object_hook)
                 if info["name"] == date["name"]:
-                    return self.load(info["name"])
-
+                    return self.load(os.path.join(path))
         return None
 
     @staticmethod
     def set_all_saves():
         saves = []
-        full_way = ''
+        # full_way = ''
         lst = os.listdir(Save.directory)
         for i in lst:
             full_way = os.path.join(Save.directory, i)
