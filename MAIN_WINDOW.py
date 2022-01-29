@@ -239,8 +239,8 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
     rect_pictur = car_obj.mask.last_image.path
     max_speed = car_obj.specifications["max_speed"]
     time_run = car_obj.specifications["boost"]  # разгон
-    limited_time = road.set_time(road.distance / road.specifications.PX_KM)
-    distance = (road.distance * 1000) // road.specifications.PX_KM
+    limited_time = road.set_time(1000 * road.distance / road.specifications.PX_KM)
+    distance = (road.distance * 1000) / road.specifications.PX_KM
     winning_money = round(road.money * car_obj.class_car.k_money)
     # screen, size: tuple[int, int], save: Save, road: Road, car: Car
     # winning_money = 100  # деньги которые он выйграет
@@ -771,8 +771,11 @@ def main_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Ca
 
 def start_game(screen, size: tuple[int, int], save: Save, road: Road, car_obj: Car):
     screen_new = pygame.display.set_mode((1542, 799))
-    # money, finished = main_game(screen_new, (1542, 799), save, road, car_obj)
-    money, finished = 10, False
+    tup = main_game(screen_new, (1542, 799), save, road, car_obj)
+    if tup is None:
+        return None
+    money, finished = tup
+    # money, finished = 10, False
     if finished:
         save.specifications.money += money
     road.complete_trip = finished

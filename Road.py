@@ -116,6 +116,6 @@ class Road:
         return self.distance
 
     def set_time(self, distance):
-        self.time = round(distance / 30)
+        self.time = round(distance / 15)
         return self.time
 

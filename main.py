@@ -16,11 +16,10 @@ if __name__ == '__main__':
     size = width, height = 1542, 799
     screen = pygame.display.set_mode(size)
     pygame.mixer.music.load("data/c329a3c28705add.mp3")
-    # pygame.mixer.music.play(-1)
-
-    # starter = Starter(menu, screen, size)
+    pygame.mixer.music.play(-1)
+    starter = Starter(menu, screen, size)
     # starter = Starter(map_display, screen=screen, size=size, save=Save())
-    starter = Starter(saves_dislpay, screen=screen, size=size)
+    # starter = Starter(saves_dislpay, screen=screen, size=size)
     # data = pickle.load(open('Tools/stat_save_road_car.txt', 'rb'))
     # starter = Starter(Choosing_car.choosing_car, screen, size, data[0], data[1])
 
@@ -35,4 +34,4 @@ if __name__ == '__main__':
             pass
         starter = starter.start()
         starter: Starter
-    pygame.mixer.music.pause()
+    # pygame.mixer.music.pause()
